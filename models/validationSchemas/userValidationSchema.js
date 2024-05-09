@@ -1,6 +1,6 @@
 import Joi from "joi";
 
-export const registerUserSchema = Joi.object({
+export const registerLoginUserSchema = Joi.object({
   email: Joi.string().email({ minDomainSegments: 2 }).required().messages({
     "string.email": "Uncorrect email name or domain",
     "any.required": "Missed required email field",
@@ -17,3 +17,4 @@ export const resendEmailSchema = Joi.object({
     "string.email": "Uncorrect email name or domain",
   }),
 });
+

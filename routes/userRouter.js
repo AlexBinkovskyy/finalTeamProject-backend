@@ -1,11 +1,12 @@
 import express from "express";
 import validateBody from "../helpers/validateBody.js";
 import {
-  registerUserSchema,
+  registerLoginUserSchema,
   resendEmailSchema,
 } from "../models/validationSchemas/userValidationSchema.js";
 import {
   createNewUser,
+  loginUser,
   sendVerificationEmail,
   verificationTokenCheck,
 } from "../controllers/userController.js";
@@ -15,7 +16,7 @@ const userRouter = express.Router();
 
 userRouter.post(
   "/register",
-  validateBody(registerUserSchema),
+  validateBody(registerLoginUserSchema),
   asyncWrapper(createNewUser),
   asyncWrapper(sendVerificationEmail)
 );
@@ -27,7 +28,7 @@ userRouter.post(
   asyncWrapper(sendVerificationEmail)
 );
 
-userRouter.post("/login");
+userRouter.post("/login", validateBody(registerLoginUserSchema), asyncWrapper(loginUser));
 
 userRouter.get("/current");
 

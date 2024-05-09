@@ -7,8 +7,8 @@ import { htmlTemplate } from "../helpers/htmlTemplate.js";
 
 export const checkUserByEmail = async ({ email }) => {
   return await User.findOne(
-    { email },
-    { password: 1, email: 1, verify: 1, verificationToken: 1, token: 1 }
+    { email }
+    // { password: 1, email: 1, verify: 1, verificationToken: 1, token: 1 }
   );
 };
 
@@ -86,4 +86,23 @@ export const emailService = async (user) => {
     .sendMail(emailOptions)
     .then((info) => console.log(info))
     .catch((err) => console.log(err));
+};
+
+export const checkUserCreds = async (creds) => {
+  const result = await checkUserByEmail(creds);
+  if (!result) return false;
+  const comparepass = await bcrypt.compare(creds.password, result.password);
+  return comparepass && result.isVerified ? result : false;
+};
+
+export const login = async (user) => {
+  const { _id } = user;
+  const userToken = await updateUserWithToken(user, _id);
+  const loggedUser = await User.findByIdAndUpdate(
+    _id,
+    { token: userToken },
+    { new: true }
+  ).select('-password -isVerified -verificationToken');
+  console.log(loggedUser);
+  return loggedUser;
 };
