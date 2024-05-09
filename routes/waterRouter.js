@@ -1,10 +1,10 @@
 import express from 'express'
-import { asyncWrapper } from '../midleWares/asyncWrapper';
-import { checkToken } from '../midleWares/checkToken';
+// import { asyncWrapper } from '../midleWares/asyncWrapper';
+// import { checkToken } from '../midleWares/checkToken';
 
 const waterRouter = express.Router();
 
-waterRouter.use(asyncWrapper(checkToken))
+// waterRouter.use((checkToken))
 
 waterRouter.patch("/add")
 waterRouter.put("/edit")
