@@ -1,15 +1,15 @@
 {
   "name": "finalteamproject-backend",
   "version": "1.0.0",
-  "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "start": "node app.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "type": "module",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
@@ -17,6 +17,7 @@
     "express": "^4.19.2",
     "joi": "^17.13.1",
     "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.6.1",
     "mongoose": "^8.3.4",
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.13",
@@ -25,5 +26,6 @@
   "devDependencies": {
     "nodemon": "^3.1.0",
     "uuid": "^9.0.1"
-  }
+  },
+  "description": ""
 }
