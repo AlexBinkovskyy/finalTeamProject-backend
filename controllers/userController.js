@@ -1,5 +1,11 @@
 import HttpError from "../helpers/HttpError.js";
-import { checkUserByEmail, createUser, emailService}  from "../services/userService.js";
+import {
+  changeVerificationCreds,
+  checkUserByEmail,
+  createUser,
+  emailService,
+  findVerifiedToken,
+} from "../services/userService.js";
 
 export const createNewUser = async (req, res, next) => {
   if (await checkUserByEmail(req.body))
@@ -9,19 +15,27 @@ export const createNewUser = async (req, res, next) => {
   next();
 };
 
+export const verificationTokenCheck = async (req, res, next) => {
+  const checkToken = await findVerifiedToken(req.params.token);
+  if (!checkToken) throw HttpError(404, "User not found");
+  changeVerificationCreds(checkToken);
+  res.status(200).json({ message: "Verification successful" });
+};
+
 export const sendVerificationEmail = async (req, res, next) => {
   const user = await checkUserByEmail(req.body);
 
   if (!user) throw HttpError(404, "User not found");
   if (!user.email) throw HttpError(400, "missing required field email");
-  if (user.isVerified) throw HttpError(400, "Verification has already been passed");
+  if (user.isVerified)
+    throw HttpError(400, "Verification has already been passed");
 
   await emailService(user);
   if (req.user === "new") {
     res.status(201).json({
       user: {
         email: req.body.email,
-        message: "Verification email sent"
+        message: "Verification email sent",
       },
     });
   } else {

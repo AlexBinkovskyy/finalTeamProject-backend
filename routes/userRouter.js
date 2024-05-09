@@ -1,7 +1,11 @@
 import express from "express";
 import validateBody from "../helpers/validateBody.js";
 import { registerUserSchema } from "../models/validationSchemas/userValidationSchema.js";
-import { createNewUser, sendVerificationEmail } from "../controllers/userController.js";
+import {
+  createNewUser,
+  sendVerificationEmail,
+  verificationTokenCheck,
+} from "../controllers/userController.js";
 import { asyncWrapper } from "../midleWares/asyncWrapper.js";
 
 const userRouter = express.Router();
@@ -12,7 +16,8 @@ userRouter.post(
   asyncWrapper(createNewUser),
   asyncWrapper(sendVerificationEmail)
 );
-userRouter.get("/verify/:token");
+userRouter.get("/verify/:token",
+asyncWrapper(verificationTokenCheck));
 userRouter.post("/login");
 userRouter.get("/current");
 userRouter.put("/:userId");

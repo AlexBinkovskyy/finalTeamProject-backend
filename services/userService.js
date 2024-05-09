@@ -22,11 +22,25 @@ export const createUser = async (userData) => {
   newUser.password = undefined;
   return newUser.toJSON();
 };
+
+export const findVerifiedToken = async (verificationToken) => {
+  return await User.findOne(
+    { verificationToken },
+    { verificationToken: 1, verify: 1 }
+  );
+};
+
 export const checkTokenPlusUser = async (id, dbToken) => {
   const user = await User.findById(id, { password: 0 });
   if (!user) return false;
   const comparetokens = user.token === dbToken ? true : false;
   return comparetokens ? user : false;
+};
+
+export const changeVerificationCreds = async (creds) => {
+  creds.verificationToken = "";
+  creds.isVerified = true;
+  return await User.findByIdAndUpdate(creds._id, creds, { new: true });
 };
 
 export const deleteTokenFromUser = async (userData) => {
@@ -36,8 +50,6 @@ export const deleteTokenFromUser = async (userData) => {
   });
   return user ? true : false;
 };
-
-
 
 export const emailService = async (user) => {
   const { email, verificationToken } = user;
