@@ -17,7 +17,11 @@ const userSchema = new Schema(
     weigth: Number,
     activeTime: Number,
     goal: Number,
-    avatarUrl: { type: String },
+    avatarUrl: {
+      type: String,
+      default:
+        "https://finalteamproject-backend.onrender.com/icon/defaultAvatar.svg",
+    },
     token: String,
     isVerified: { type: Boolean, default: false },
     verificationToken: {
