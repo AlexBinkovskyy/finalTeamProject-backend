@@ -3,7 +3,7 @@ window.onload = async () => {
     try {
       const wrapper = document.querySelector(".wrapper");
       const resp = await fetch(
-        `????/${
+        `https://finalteamproject-backend.onrender.com/api/verify/${
           window.location.href.split("?")[1]
         }`
       );
@@ -11,7 +11,7 @@ window.onload = async () => {
         const message = "User not found...";
         document.querySelector("h1").textContent = message;
         const timeoutId = setTimeout(() => {
-          window.location.href = "https://goit.global/ua/";
+          window.location.href = "https://alexbinkovskyy.github.io/finalTeamProject/";
         }, timeout);
       }
       if (resp.status === 200) {
@@ -20,7 +20,7 @@ window.onload = async () => {
        
   
         const timeoutId = setTimeout(() => {
-          window.location.href = "http://google.com";
+          window.location.href = "https://alexbinkovskyy.github.io/finalTeamProject/";
         }, timeout);
       }
     } catch (err) {
