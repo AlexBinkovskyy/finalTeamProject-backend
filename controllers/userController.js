@@ -27,8 +27,6 @@ export const sendVerificationEmail = async (req, res, next) => {
 
   if (!user) throw HttpError(404, "User not found");
   if (!user.email) throw HttpError(400, "missing required field email");
-  if (user.isVerified)
-    throw HttpError(400, "Verification has already been passed");
 
   await emailService(user);
   if (req.user === "new") {

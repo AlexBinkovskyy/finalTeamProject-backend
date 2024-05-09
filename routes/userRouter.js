@@ -1,6 +1,9 @@
 import express from "express";
 import validateBody from "../helpers/validateBody.js";
-import { registerUserSchema } from "../models/validationSchemas/userValidationSchema.js";
+import {
+  registerUserSchema,
+  resendEmailSchema,
+} from "../models/validationSchemas/userValidationSchema.js";
 import {
   createNewUser,
   sendVerificationEmail,
@@ -16,12 +19,22 @@ userRouter.post(
   asyncWrapper(createNewUser),
   asyncWrapper(sendVerificationEmail)
 );
-userRouter.get("/verify/:token",
-asyncWrapper(verificationTokenCheck));
+userRouter.get("/verify/:token", asyncWrapper(verificationTokenCheck));
+
+userRouter.post(
+  "/verify",
+  validateBody(resendEmailSchema),
+  asyncWrapper(sendVerificationEmail)
+);
+
 userRouter.post("/login");
+
 userRouter.get("/current");
+
 userRouter.put("/:userId");
+
 userRouter.get("/refreshtoken");
+
 userRouter.post("/logout/:userId");
 
 export default userRouter;

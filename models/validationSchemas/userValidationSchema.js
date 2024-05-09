@@ -11,3 +11,9 @@ export const registerUserSchema = Joi.object({
     "any.required": "Missed required password field",
   }),
 });
+
+export const resendEmailSchema = Joi.object({
+  email: Joi.string().email({ minDomainSegments: 2 }).messages({
+    "string.email": "Uncorrect email name or domain",
+  }),
+});
