@@ -58,7 +58,7 @@
     "/water/edit":{},
     "/water/delete":{},
     "/water/daycosumption":{},
-    "/water/mounthconsumption":{}
+    "/water/monthconsumption":{}
   },
 
   "components": {
