@@ -1,0 +1,106 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "version": "2.0.0",
+    "title": "REST API Docks",
+    "description": "Documentation of the API"
+  },
+  "consumes": ["application/json", "multipart/form-data"],
+  "produces": ["application/json"],
+  "servers": [{ "url": "localhost:3000/api/v1/" }],
+  "tags": [{ "name": "Auth", "description": "Authorization endpoints" }],
+  "paths": {
+    "/users/register": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User registration",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Registration object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrationRequest"
+              }
+            }
+          }
+        },
+        "response": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegistrationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)",
+            "content": {}
+          },
+          "409": {
+            "description": "Provided email already exists",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/users/login":{},
+    "/users/current":{},
+    "/users/:userId":{},
+    "/users/refreshtoken":{},
+    "/users/logout/:userId":{},
+    "/water/add":{},
+    "/water/edit":{},
+    "/water/delete":{},
+    "/water/daycosumption":{},
+    "/water/mounthconsumption":{}
+  },
+
+  "components": {
+    "schemas": {
+      "RegistrationRequest": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "qwqerty1234"
+          }
+        }
+      },
+      "RegistrationResponse": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "userId": {
+            "type": "string",
+            "description":"User's ID",
+            "example": "2137192082113719239172"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
