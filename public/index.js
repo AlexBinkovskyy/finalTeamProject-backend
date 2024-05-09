@@ -3,7 +3,7 @@ window.onload = async () => {
     try {
       const wrapper = document.querySelector(".wrapper");
       const resp = await fetch(
-        `https://finalteamproject-backend.onrender.com/api/verify/${
+        `https://finalteamproject-backend.onrender.com/api/users/verify/${
           window.location.href.split("?")[1]
         }`
       );

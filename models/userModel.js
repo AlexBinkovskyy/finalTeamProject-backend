@@ -20,7 +20,7 @@ const userSchema = new Schema(
     avatarUrl: {
       type: String,
       default:
-        "https://finalteamproject-backend.onrender.com/icon/defaultAvatar.svg",
+        "https://finalteamproject-backend.onrender.com/icon/defaultAvatar.png",
     },
     token: String,
     isVerified: { type: Boolean, default: false },

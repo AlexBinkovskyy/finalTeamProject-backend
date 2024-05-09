@@ -76,6 +76,6 @@ export const emailService = async (user) => {
   };
   await transporter
     .sendMail(emailOptions)
-    .then((info) => console.log("1", info))
-    .catch((err) => console.log("2", err));
+    .then((info) => console.log(info))
+    .catch((err) => console.log(err));
 };
