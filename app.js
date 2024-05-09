@@ -2,9 +2,11 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
 import express from "express";
+import swaggerUi from 'swagger-ui-express'
 import swaggerDocument from "./swagger.json" assert { type: "json" };
 import userRouter from "./routes/userRouter.js";
 import waterRouter from "./routes/waterRouter.js";
+
 
 dotenv.config();
 const { PORT, DB_HOST } = process.env;
