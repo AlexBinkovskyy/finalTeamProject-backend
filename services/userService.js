@@ -1,13 +1,14 @@
-import {User} from '../models/userModel.js'
+import { User } from "../models/userModel.js";
 import nodemailer from "nodemailer";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
-import { htmlTemplate } from '../helpers/htmlTemplate.js';
+import jwt from "jsonwebtoken";
+import { htmlTemplate } from "../helpers/htmlTemplate.js";
 
 export const checkUserByEmail = async ({ email }) => {
   return await User.findOne(
-    { email },
-    { password: 1, email: 1, verify: 1, verificationToken: 1 }
+    { email }
+    // { password: 1, email: 1, verify: 1, verificationToken: 1, token: 1 }
   );
 };
 
@@ -18,10 +19,16 @@ export const createUser = async (userData) => {
     .update(Date.now().toString())
     .digest("hex");
   const newUser = new User(userData);
+  await updateUserWithToken(newUser, newUser._id);
   await newUser.save();
   newUser.password = undefined;
-  return newUser.toJSON();
+  return newUser;
 };
+
+const updateUserWithToken = async (newUser, id) =>
+  (newUser.token = jwt.sign({ id }, process.env.SECRET_KEY, {
+    expiresIn: "24h",
+  }));
 
 export const findVerifiedToken = async (verificationToken) => {
   return await User.findOne(
@@ -52,7 +59,7 @@ export const deleteTokenFromUser = async (userData) => {
 };
 
 export const emailService = async (user) => {
-  const { email, verificationToken } = user;
+  const { email, verificationToken, token } = user;
 
   const config = {
     host: process.env.POST_SERVICE_HOST,
@@ -71,11 +78,31 @@ export const emailService = async (user) => {
     subject: "EMAIL VERIFICATION CODE",
     text: "verivication link",
     html: htmlTemplate(
-      `https://finalteamproject-backend.onrender.com/index.html?${verificationToken}`
+      `https://finalteamproject-backend.onrender.com/index.html?${verificationToken}&${token}`
+      // `http://localhost:10000/index.html?${verificationToken}&${token}`
     ),
   };
   await transporter
     .sendMail(emailOptions)
     .then((info) => console.log(info))
     .catch((err) => console.log(err));
+};
+
+export const checkUserCreds = async (creds) => {
+  const result = await checkUserByEmail(creds);
+  if (!result) return false;
+  const comparepass = await bcrypt.compare(creds.password, result.password);
+  return comparepass && result.isVerified ? result : false;
+};
+
+export const login = async (user) => {
+  const { _id } = user;
+  const userToken = await updateUserWithToken(user, _id);
+  const loggedUser = await User.findByIdAndUpdate(
+    _id,
+    { token: userToken },
+    { new: true }
+  ).select('-password -isVerified -verificationToken');
+  console.log(loggedUser);
+  return loggedUser;
 };
