@@ -16,7 +16,6 @@ export const createNewUser = async (req, res, next) => {
 };
 
 export const verificationTokenCheck = async (req, res, next) => {
-  console.log(req.params.token);
   const checkToken = await findVerifiedToken(req.params.token);
   if (!checkToken) throw HttpError(404, "User not found");
   changeVerificationCreds(checkToken);
