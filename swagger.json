@@ -31,7 +31,7 @@
             }
           }
         },
-        "response": {
+        "responses": {
           "201": {
             "description": "Successful operation",
             "content": {
@@ -71,7 +71,7 @@
             }
           }
         },
-        "response": {
+        "responses": {
           "200": {
             "description": "Successful operation",
             "content": {
