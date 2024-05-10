@@ -1,4 +1,4 @@
-import HttpError from '../helpers/HttpError/js'
+import HttpError from '../helpers/HttpError.js'
 import jwt from "jsonwebtoken";
 import { checkTokenPlusUser, deleteTokenFromUser } from '../services/userService.js';
 

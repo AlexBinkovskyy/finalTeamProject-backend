@@ -11,6 +11,7 @@ import {
   verificationTokenCheck,
 } from "../controllers/userController.js";
 import { asyncWrapper } from "../midleWares/asyncWrapper.js";
+import { checkAuthenticityAndLogout } from "../midleWares/checkAuthenticity.js";
 
 const userRouter = express.Router();
 
@@ -37,6 +38,6 @@ userRouter.put("/:userId");
 
 userRouter.get("/refreshtoken");
 
-userRouter.post("/logout/:userId");
+userRouter.post("/logout/", asyncWrapper(checkAuthenticityAndLogout));
 
 export default userRouter;

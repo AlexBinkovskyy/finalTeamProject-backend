@@ -193,10 +193,47 @@
       }
     },
 
+    "/users/logout": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "User log-in",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "description": "Token",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "a60b9bed758d12f710d227b82bcc4077..."
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful operation",
+            "content": {}
+          }
+        },
+        "401": {
+          "description": "Not authorized",
+          "content": {
+            "type": "object",
+            "content": {
+              "message": {
+                "type": "string",
+                "example": "Not authorized"
+              }
+            }
+          }
+        }
+      }
+    },
+
     "/users/current": {},
+
     "/users/:userId": {},
     "/users/refreshtoken": {},
-    "/users/logout/:userId": {},
 
     "/water/add": {},
     "/water/edit": {},
