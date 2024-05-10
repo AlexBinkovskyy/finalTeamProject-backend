@@ -3,7 +3,7 @@ import nodemailer from "nodemailer";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
-import { htmlTemplate } from "../helpers/htmlTemplate.js";
+import { htmlTemplate } from "../helpers/statickHtml/htmlTemplate.js";
 
 export const checkUserByEmail = async ({ email }) => {
   return await User.findOne(
@@ -78,8 +78,8 @@ export const emailService = async (user) => {
     subject: "EMAIL VERIFICATION CODE",
     text: "verivication link",
     html: htmlTemplate(
-      `https://finalteamproject-backend.onrender.com/index.html?${verificationToken}&${token}`
-      // `http://localhost:10000/index.html?${verificationToken}&${token}`
+      `https://finalteamproject-backend.onrender.com/confirm.html?${verificationToken}&${token}`
+      // `http://localhost:10000/confirm.html?${verificationToken}&${token}`
     ),
   };
   await transporter
