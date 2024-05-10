@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "version": "2.0.2",
-    "title": "Aqua tracker REST-API Documentation",
+    "title": "Aqua track REST-API Documentation",
     "description": "Documentation of the API"
   },
   "consumes": ["application/json", "multipart/form-data"],
@@ -19,7 +19,6 @@
         "tags": ["Users"],
         "summary": "User registration",
         "parameters": [],
-        "security": [{ "Bearer": [] }],
         "requestBody": {
           "description": "Registration object",
           "required": true,
@@ -54,12 +53,112 @@
       }
     },
 
+    "/users/verify/{token}": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "User email verification end-point",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "description": "Verification token",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "a60b9bed758d12f710d227b82bcc4077"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "description": "Email address of the user"
+                  },
+                  "message": {
+                    "type": "string",
+                    "description": "Message indicating the action performed"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)",
+            "content": {}
+          },
+          "404": {
+            "description": "User not found",
+            "content": {}
+          }
+        }
+      }
+    },
+
+    "/users/verify": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "User email resend verification end-point",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "description": "User's email",
+                    "format": "email",
+                    "example": "example@test.net"
+                  }
+                },
+                "required": ["email"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Message indicating the action performed",
+                      "example": "Verification email sent"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)",
+            "content": {}
+          },
+          "404": {
+            "description": "User not found",
+            "content": {}
+          }
+        }
+      }
+    },
+
     "/users/login": {
       "post": {
         "tags": ["Users"],
         "summary": "User log-in",
         "parameters": [],
-        "security": [{ "Bearer": [] }],
         "requestBody": {
           "description": "Login object",
           "required": true,
@@ -134,12 +233,12 @@
               "email": {
                 "type": "string",
                 "description": "User's email",
-                "format": "email"
+                "format": "email",
+                "example": "example@test.net"
               },
               "message": {
                 "type": "string",
-                "description": "",
-                "example": ""
+                "example": "Email was sent"
               }
             }
           }
@@ -168,15 +267,25 @@
             "type": "object",
             "description": "logged user credentials",
             "properties": {
-              "_id": { "type": "string", "example": "663dfa830247bf578218088e" },
-              "email": { "type": "string" , "example": "example.test.net"},
-              "avatarUrl": { "type": "string", "example": "https://finalteamproject-backend.onrender.com/icon/defaultAvatar.png" },
-              "token": { "type": "string", "example": "eyJhbGciOi12UzI1NiIsInR5cCI6IkpX..." }
+              "_id": {
+                "type": "string",
+                "example": "663dfa830247bf578218088e"
+              },
+              "email": { "type": "string", "example": "example.test.net" },
+              "avatarUrl": {
+                "type": "string",
+                "example": "https://finalteamproject-backend.onrender.com/icon/defaultAvatar.png"
+              },
+              "token": {
+                "type": "string",
+                "example": "eyJhbGciOi12UzI1NiIsInR5cCI6IkpX..."
+              }
             }
           }
         }
       }
     },
+
     "securitySchemes": {
       "Bearer": {
         "type": "http",
