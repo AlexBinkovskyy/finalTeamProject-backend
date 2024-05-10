@@ -55,6 +55,5 @@ export const loginUser = async (req, res, next) => {
 };
 
 export const getCurrentUserCreds = async (req, res, next) => {
-  console.log(req.user);
   res.status(200).json({user: req.user});
 };

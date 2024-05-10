@@ -196,44 +196,47 @@
     "/users/logout": {
       "post": {
         "tags": ["Users"],
-        "summary": "User log-in",
-        "parameters": [
-          {
-            "name": "token",
-            "in": "path",
-            "description": "Token",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "a60b9bed758d12f710d227b82bcc4077..."
-            }
+        "summary": "User log-out",
+        "security": [{ "Bearer": [] }],
+        "parameters": [{
+          "name": "token",
+          "in": "header",
+          "description": "Authorization token",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "a60b9bed758d12f710d227b82bcc4077..."
           }
-        ],
+        }],
         "responses": {
           "204": {
             "description": "Successful operation",
             "content": {}
-          }
-        },
-        "401": {
-          "description": "Not authorized",
-          "content": {
-            "type": "object",
+          },
+          "401": {
+            "description": "Not authorized",
             "content": {
-              "message": {
-                "type": "string",
-                "example": "Not authorized"
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Not authorized"
+                    }
+                  }
+                }
               }
             }
           }
         }
       }
     },
-
     "/users/current": {
       "get": {
         "tags": ["Users"],
         "summary": "Getting credentials of the user",
+        "security": [{ "Bearer": [] }],
         "parameters": [
           {
             "name": "token",

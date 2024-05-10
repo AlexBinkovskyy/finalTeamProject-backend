@@ -7,7 +7,7 @@ export const checkAuthenticity = async (req, res, next) => {
   const [bearer, token] = authorization.split(" ");
   if (bearer !== "Bearer") next(HttpError(401, "Not authorized"));
   try {
-    const { id } = await jwt.verify(token, process.env.SECRET_KEY);
+    const { id } = jwt.verify(token, process.env.SECRET_KEY);
     const user = await checkTokenPlusUser(id, token);
     if (!user) throw HttpError(401, "Not authorized");
     req.user = user;
@@ -22,8 +22,9 @@ export const checkAuthenticityAndLogout = async (req, res, next) => {
   const [bearer, token] = authorization.split(" ");
   if (bearer !== "Bearer") next(HttpError(401));
   try {
-    const { id } = await verifyToken(token);
+    const { id } = jwt.verify(token, process.env.SECRET_KEY);
     const user = await checkTokenPlusUser(id, token);
+    
     if (!user) throw HttpError(401, "Not authorized");
     if (!(await deleteTokenFromUser(user))) next(HttpError(500));
     res.status(204).end();

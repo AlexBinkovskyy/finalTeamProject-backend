@@ -213,7 +213,7 @@ export const htmlTemplate = (link) => {
           <!-- start copy -->
           <tr>
             <td align="left" bgcolor="#ffffff" style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px; border-bottom: 3px solid #d4dadf">
-              <p style="margin: 0;">Cheers, backend team<br>Alex Binkovskyi's Node.js project</p>
+              <p style="margin: 0;">Cheers, backend team<br>"Code Crafters" Node.js final project</p>
             </td>
           </tr>
           <!-- end copy -->

@@ -39,6 +39,6 @@ userRouter.put("/:userId");
 
 userRouter.get("/refreshtoken");
 
-userRouter.post("/logout/", asyncWrapper(checkAuthenticityAndLogout));
+userRouter.post("/logout", asyncWrapper(checkAuthenticityAndLogout));
 
 export default userRouter;
