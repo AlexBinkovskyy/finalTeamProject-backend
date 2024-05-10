@@ -1,18 +1,22 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "version": "2.0.0",
-    "title": "REST API Docks",
+    "version": "2.0.2",
+    "title": "Aqua tracker REST-API Documentation",
     "description": "Documentation of the API"
   },
   "consumes": ["application/json", "multipart/form-data"],
   "produces": ["application/json"],
-  "servers": [{ "url": "localhost:3000/api/v1/" }],
-  "tags": [{ "name": "Auth", "description": "Authorization endpoints" }],
+  "servers": [{ "url": "https://finalteamproject-backend.onrender.com/api" }],
+  "tags": [
+    { "name": "Users", "description": "Authorization endpoints" },
+    { "name": "Water", "description": "Water consumption services endpoints" }
+  ],
+
   "paths": {
     "/users/register": {
       "post": {
-        "tags": ["Auth"],
+        "tags": ["Users"],
         "summary": "User registration",
         "parameters": [],
         "security": [{ "Bearer": [] }],
@@ -49,16 +53,57 @@
         }
       }
     },
-    "/users/login":{},
-    "/users/current":{},
-    "/users/:userId":{},
-    "/users/refreshtoken":{},
-    "/users/logout/:userId":{},
-    "/water/add":{},
-    "/water/edit":{},
-    "/water/delete":{},
-    "/water/daycosumption":{},
-    "/water/monthconsumption":{}
+
+    "/users/login": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "User log-in",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Login object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LogInRequest"
+              }
+            }
+          }
+        },
+        "response": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogInResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)",
+            "content": {}
+          },
+          "409": {
+            "description": "Provided email already exists",
+            "content": {}
+          }
+        }
+      }
+    },
+
+    "/users/current": {},
+    "/users/:userId": {},
+    "/users/refreshtoken": {},
+    "/users/logout/:userId": {},
+
+    "/water/add": {},
+    "/water/edit": {},
+    "/water/delete": {},
+    "/water/daycosumption": {},
+    "/water/monthconsumption": {}
   },
 
   "components": {
@@ -82,15 +127,52 @@
       "RegistrationResponse": {
         "type": "object",
         "properties": {
+          "user": {
+            "type": "object",
+            "description": "user's registration credential",
+            "properties": {
+              "email": {
+                "type": "string",
+                "description": "User's email",
+                "format": "email"
+              },
+              "message": {
+                "type": "string",
+                "description": "",
+                "example": ""
+              }
+            }
+          }
+        }
+      },
+      "LogInRequest": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
           "email": {
             "type": "string",
             "description": "User's email",
             "format": "email"
           },
-          "userId": {
+          "password": {
             "type": "string",
-            "description":"User's ID",
-            "example": "2137192082113719239172"
+            "description": "User's password",
+            "example": "qwqerty1234"
+          }
+        }
+      },
+      "LogInResponse": {
+        "type": "object",
+        "properties": {
+          "loggedUser": {
+            "type": "object",
+            "description": "logged user credentials",
+            "properties": {
+              "_id": { "type": "string", "example": "663dfa830247bf578218088e" },
+              "email": { "type": "string" , "example": "example.test.net"},
+              "avatarUrl": { "type": "string", "example": "https://finalteamproject-backend.onrender.com/icon/defaultAvatar.png" },
+              "token": { "type": "string", "example": "eyJhbGciOi12UzI1NiIsInR5cCI6IkpX..." }
+            }
           }
         }
       }

@@ -20,6 +20,7 @@ userRouter.post(
   asyncWrapper(createNewUser),
   asyncWrapper(sendVerificationEmail)
 );
+
 userRouter.get("/verify/:token", asyncWrapper(verificationTokenCheck));
 
 userRouter.post(
