@@ -37,10 +37,10 @@ export const findVerifiedToken = async (verificationToken) => {
   );
 };
 
-export const checkTokenPlusUser = async (id, dbToken) => {
-  const user = await User.findById(id, { password: 0 });
-  if (!user) return false;
-  const comparetokens = user.token === dbToken ? true : false;
+export const checkTokenPlusUser = async (id, token) => {
+  const user = await User.findById(id, { password: 0, verificationToken: 0});
+  if (!user.isVerified) return false;
+  const comparetokens = user.token === token ? true : false;
   return comparetokens ? user : false;
 };
 

@@ -6,12 +6,13 @@ import {
 } from "../models/validationSchemas/userValidationSchema.js";
 import {
   createNewUser,
+  getCurrentUserCreds,
   loginUser,
   sendVerificationEmail,
   verificationTokenCheck,
 } from "../controllers/userController.js";
 import { asyncWrapper } from "../midleWares/asyncWrapper.js";
-import { checkAuthenticityAndLogout } from "../midleWares/checkAuthenticity.js";
+import { checkAuthenticity, checkAuthenticityAndLogout } from "../midleWares/checkAuthenticity.js";
 
 const userRouter = express.Router();
 
@@ -32,7 +33,7 @@ userRouter.post(
 
 userRouter.post("/login", validateBody(registerLoginUserSchema), asyncWrapper(loginUser));
 
-userRouter.get("/current");
+userRouter.get("/current", asyncWrapper(checkAuthenticity), getCurrentUserCreds);
 
 userRouter.put("/:userId");
 

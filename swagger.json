@@ -230,7 +230,36 @@
       }
     },
 
-    "/users/current": {},
+    "/users/current": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Getting credentials of the user",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "description": "Token",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "a60b9bed758d12f710d227b82bcc4077..."
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCurrentResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
 
     "/users/:userId": {},
     "/users/refreshtoken": {},
@@ -320,9 +349,71 @@
             }
           }
         }
+      },
+      "GetCurrentResponse": {
+        "type": "object",
+        "description": "Response object of current user",
+        "properties": {
+          "user": {
+            "type": "object",
+            "properties": {
+              "_id": {
+                "type": "string",
+                "description": "Users ID",
+                "example": "a60b9bed758d12f710d227b82bcc4077"
+              },
+              "name": {
+                "type": "string",
+                "description": "Users name",
+                "example": "Barbara Straisand, uwe-owee-ooo-weee"
+              },
+              "email": {
+                "type": "string",
+                "description": "User's email",
+                "format": "email",
+                "example": "example@test.net"
+              },
+              "gender": {
+                "type": "string",
+                "description": "User gender",
+                "example": "male or female"
+              },
+              "dailyNorma": {
+                "type": "number",
+                "description": "Users counted daily norma of water",
+                "example": "1.8"
+              },
+              "weight": {
+                "type": "number",
+                "description": "Users weight",
+                "example": "60"
+              },
+              "activeTime": {
+                "type": "number",
+                "description": "Users active time",
+                "example": "2"
+              },
+              "goal": {
+                "type": "string",
+                "description": "Users water consumotion goal",
+                "example": "2.2"
+              },
+              "avatarUrl": {
+                "type": "string",
+                "description": "User's avatar URL",
+                "format": "url",
+                "example": "https://finalteamproject-backend.onrender.com/icon/defaultAvatar.png"
+              },
+              "token": {
+                "type": "string",
+                "description": "User's access token",
+                "example": "a60b9bed758d12f710d227b82bcc4077..."
+              }
+            }
+          }
+        }
       }
     },
-
     "securitySchemes": {
       "Bearer": {
         "type": "http",
