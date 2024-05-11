@@ -103,10 +103,7 @@ export const login = async (user) => {
     { token: userToken },
     { new: true }
   ).select("-password -verificationToken");
-  return {
-
-  }
-  loggedUser;
+  return  loggedUser;
 };
 
 // {
