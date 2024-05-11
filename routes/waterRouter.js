@@ -22,7 +22,7 @@ const waterRouter = express.Router()
 
 // waterRouter.use((checkToken))
 
-waterRouter.patch('/', validateBody(addWaterDataSchema), protect, addWater)
+waterRouter.post('/', validateBody(addWaterDataSchema), protect, addWater)
 waterRouter.put(
 	'/:id',
 	validateBody(updateWaterDataSchema),

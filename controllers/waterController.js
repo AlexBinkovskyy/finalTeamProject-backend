@@ -6,22 +6,19 @@ import { v4 } from 'uuid'
 /**
  * Приклад вхідних даних
  * {
- * 	date: '01-01-2024',
+ * 	date: '01.01.2024',
  * 	time: '10:00',
  * 	ammount: 250
  * }
  */
 export const addWater = asyncWrapper(async (req, res, next) => {
-	console.log('========start=========')
 	const waterData = req.body
 	const { date, time, amount } = waterData
 	const userId = req.user._id
 	let isNewDate = false
 
-	//Отримую весь запис
 	let waterNote = await Water.findOne({ owner: userId })
 
-	//Якщо такого нема то створюю початкову структуру
 	if (!waterNote) {
 		waterNote = new Water({
 			owner: userId,
@@ -29,10 +26,8 @@ export const addWater = asyncWrapper(async (req, res, next) => {
 		})
 	}
 
-	//Беремо статистику за потрібний день
 	let waterAmountItem = waterNote.waterAmount.find(water => water.date === date)
 
-	//Якщо на цій даті немає інформації, то створюємо пустий шаблон
 	if (!waterAmountItem) {
 		waterAmountItem = {
 			date,
@@ -47,7 +42,6 @@ export const addWater = asyncWrapper(async (req, res, next) => {
 	})
 
 	if (isNewDate) {
-		// Якщо це нова дата, додайте новий об'єкт waterAmountItem
 		waterNote.waterAmount.push(waterAmountItem)
 	}
 
@@ -121,7 +115,6 @@ export const deleteWater = asyncWrapper(async (req, res, next) => {
 export const getWaterByDay = asyncWrapper(async (req, res, next) => {
 	const ownerId = req.user._id
 	const { date } = req.params
-	// const [day, mounth, year] = date.split('.')
 
 	const findWater = await Water.findOne({ owner: ownerId })
 	if (!findWater) {
