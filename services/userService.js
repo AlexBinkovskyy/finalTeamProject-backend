@@ -38,7 +38,7 @@ export const findVerifiedToken = async (verificationToken) => {
 };
 
 export const checkTokenPlusUser = async (id, token) => {
-  const user = await User.findById(id, { password: 0, verificationToken: 0});
+  const user = await User.findById(id, { password: 0, verificationToken: 0 });
   if (!user.isVerified) return false;
   const comparetokens = user.token === token ? true : false;
   return comparetokens ? user : false;
@@ -102,6 +102,15 @@ export const login = async (user) => {
     _id,
     { token: userToken },
     { new: true }
-  ).select('-password -isVerified -verificationToken');
+  ).select("-password -verificationToken");
   return loggedUser;
 };
+
+// {
+//   {
+//       "_id": "663e8ccb83aeec5197dbc011",
+//       "email": "alex_bin@ukr.net",
+//       "avatarUrl": "https://finalteamproject-backend.onrender.com/icon/defaultAvatar.png",
+//     },
+//     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2M2U4Y2NiODNhZWVjNTE5N2RiYzAxMSIsImlhdCI6MTcxNTQzODY4MiwiZXhwIjoxNzE1NTI1MDgyfQ.dRCdl3qhlOIKT9jBGFYarwyt408IkKBpxUW5NuSSeeU"
+// }

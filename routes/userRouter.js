@@ -9,10 +9,15 @@ import {
   getCurrentUserCreds,
   loginUser,
   sendVerificationEmail,
+  upload,
   verificationTokenCheck,
 } from "../controllers/userController.js";
 import { asyncWrapper } from "../midleWares/asyncWrapper.js";
-import { checkAuthenticity, checkAuthenticityAndLogout } from "../midleWares/checkAuthenticity.js";
+import {
+  checkAuthenticity,
+  checkAuthenticityAndLogout,
+} from "../midleWares/checkAuthenticity.js";
+import { uploadImage } from "../midleWares/fileHandler.js";
 
 const userRouter = express.Router();
 
@@ -31,11 +36,19 @@ userRouter.post(
   asyncWrapper(sendVerificationEmail)
 );
 
-userRouter.post("/login", validateBody(registerLoginUserSchema), asyncWrapper(loginUser));
+userRouter.post(
+  "/login",
+  validateBody(registerLoginUserSchema),
+  asyncWrapper(loginUser)
+);
 
-userRouter.get("/current", asyncWrapper(checkAuthenticity), getCurrentUserCreds);
+userRouter.get(
+  "/current",
+  asyncWrapper(checkAuthenticity),
+  getCurrentUserCreds
+);
 
-userRouter.put("/:userId");
+userRouter.put("/update", asyncWrapper(checkAuthenticity), uploadImage.single("avatar"));
 
 userRouter.get("/refreshtoken");
 

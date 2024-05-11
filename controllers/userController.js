@@ -1,4 +1,5 @@
 import HttpError from "../helpers/HttpError.js";
+import { uploadImage } from "../midleWares/fileHandler.js";
 import {
   changeVerificationCreds,
   checkUserByEmail,
@@ -57,3 +58,7 @@ export const loginUser = async (req, res, next) => {
 export const getCurrentUserCreds = async (req, res, next) => {
   res.status(200).json({user: req.user});
 };
+
+export const upload = async (req, res, next) => {
+  uploadImage(req, res)
+}
