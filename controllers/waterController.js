@@ -41,13 +41,15 @@ export const addWater = asyncWrapper(async (req, res, next) => {
 		time,
 	})
 
+	console.log(waterAmountItem.dailyCount)
+
 	if (isNewDate) {
 		waterNote.waterAmount.push(waterAmountItem)
 	}
 
 	waterNote = await Water.create(waterNote)
 
-	res.status(201).json(waterNote)
+	res.status(201).json({ message: 'The operation is successful' })
 })
 
 /**
@@ -84,7 +86,7 @@ export const updateWater = asyncWrapper(async (req, res, next) => {
 	}
 
 	await findWater.save()
-	res.status(200).json(findWater)
+	res.status(200).json({ message: 'The operation is successful' })
 })
 
 export const deleteWater = asyncWrapper(async (req, res, next) => {
@@ -109,7 +111,7 @@ export const deleteWater = asyncWrapper(async (req, res, next) => {
 	}
 
 	await findWater.save()
-	res.status(200).json(findWater)
+	res.status(200).json({ message: 'The operation is successful' })
 })
 
 export const getWaterByDay = asyncWrapper(async (req, res, next) => {
