@@ -22,14 +22,14 @@ const waterRouter = express.Router()
 
 // waterRouter.use((checkToken))
 
-waterRouter.post('/', validateBody(addWaterDataSchema), protect, addWater)
+waterRouter.post('/add', validateBody(addWaterDataSchema), protect, addWater)
 waterRouter.put(
-  '/:id',
+  '/edit/:id',
   validateBody(updateWaterDataSchema),
   protect,
   updateWater
 )
-waterRouter.delete('/:id', protect, deleteWater)
+waterRouter.delete('/delete/:id', protect, deleteWater)
 waterRouter.get(
   '/daycosumption/:date',
   validateParams(validateParamsDateDay),
