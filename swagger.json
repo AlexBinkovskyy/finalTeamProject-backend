@@ -198,16 +198,18 @@
         "tags": ["Users"],
         "summary": "User log-out",
         "security": [{ "Bearer": [] }],
-        "parameters": [{
-          "name": "token",
-          "in": "header",
-          "description": "Authorization token",
-          "required": true,
-          "schema": {
-            "type": "string",
-            "example": "a60b9bed758d12f710d227b82bcc4077..."
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "description": "Authorization token",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "a60b9bed758d12f710d227b82bcc4077..."
+            }
           }
-        }],
+        ],
         "responses": {
           "204": {
             "description": "Successful operation",
@@ -267,11 +269,285 @@
     "/users/:userId": {},
     "/users/refreshtoken": {},
 
-    "/water/add": {},
-    "/water/edit": {},
-    "/water/delete": {},
-    "/water/daycosumption": {},
-    "/water/monthconsumption": {}
+    "/water/add": {
+      "post": {
+        "summary": "Add water consumption data",
+        "description": "Adds water consumption data for the current user.",
+        "tags": ["Water"],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "date": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2024-01-01"
+                  },
+                  "time": {
+                    "type": "string",
+                    "format": "time",
+                    "example": "10:00"
+                  },
+                  "amount": {
+                    "type": "number",
+                    "example": 270
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "The operation is successful"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/water/edit/{id}": {
+      "put": {
+        "summary": "Update water consumption data",
+        "description": "Updates water consumption data for the current user with the specified identifier.",
+        "tags": ["Water"],
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identifier of the water consumption record",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "time": {
+                    "type": "string",
+                    "format": "time",
+                    "example": "10:00"
+                  },
+                  "amount": {
+                    "type": "number",
+                    "example": 250
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "The operation is successful"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found."
+          }
+        }
+      }
+    },
+    "/water/delete/{id}": {
+      "delete": {
+        "summary": "Delete water consumption data",
+        "description": "Deletes water consumption data for the current user with the specified identifier.",
+        "tags": ["Water"],
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identifier of the water consumption record",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "The operation is successful"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found."
+          }
+        }
+      }
+    },
+    "/water/daycosumption/{date}": {
+      "get": {
+        "summary": "Get water consumption data by date",
+        "description": "Retrieves water consumption data for the current user for the specified date.",
+        "tags": ["Water"],
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "date",
+            "in": "path",
+            "description": "Date to retrieve water consumption data (format: 'YYYY-MM-DD')",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "date": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "dailyCount": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "amount": {
+                            "type": "number"
+                          },
+                          "time": {
+                            "type": "string",
+                            "format": "time"
+                          },
+                          "_id": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "_id": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found."
+          }
+        }
+      }
+    },
+    "/water/monthconsumption/{date}": {
+      "get": {
+        "summary": "Get water consumption data by month",
+        "description": "Retrieves water consumption data for the current user for the specified month and year.",
+        "tags": ["Water"],
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "date",
+            "in": "path",
+            "description": "Month and year to retrieve water consumption data (format: 'YYYY.MM')",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "date": {
+                        "type": "string",
+                        "format": "date"
+                      },
+                      "dailyCount": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "amount": {
+                              "type": "number"
+                            },
+                            "time": {
+                              "type": "string",
+                              "format": "time"
+                            },
+                            "_id": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      },
+                      "_id": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found."
+          }
+        }
+      }
+    }
   },
 
   "components": {
