@@ -50,13 +50,24 @@ export const loginUser = async (req, res, next) => {
   const user = await checkUserCreds(req.body);
   if (!user) throw HttpError(401, "Email or password is wrong or not verified");
   const loggedUser = await login(user);
-  res.status(200).json({
-    loggedUser,
-  });
+  res.status(200).json(loggedUser);
 };
 
 export const getCurrentUserCreds = async (req, res, next) => {
-  res.status(200).json({user: req.user});
+  res.status(200).json({
+    token: req.user.token,
+    user: { _id: req.user._id,
+      "name": req.user.name,
+      "email": req.user.email,
+      "gender": req.user.gender,
+      "dailyNorma": req.user.dailyNorma,
+      "weight": req.user.weigth,
+      "activeTyme": req.user.activeTime,
+      "goal": req.user.goal,
+      "avatarUrl": req.user.avatarUrl,
+      "isVerified": req.user.isVerified
+     },
+  });
 };
 
 export const upload = async (req, res, next) => {
