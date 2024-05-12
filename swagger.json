@@ -274,7 +274,7 @@
         "summary": "Add water consumption data",
         "description": "Adds water consumption data for the current user.",
         "tags": ["Water"],
-        "security": [{ "BearerAuth": [] }],
+        "security": [{ "Bearer": [] }],
         "requestBody": {
           "required": true,
           "content": {
@@ -307,13 +307,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "The operation is successful"
-                    }
-                  }
+                  "$ref": "#/components/schemas/WaterCrudResponse"
                 }
               }
             }
@@ -326,7 +320,7 @@
         "summary": "Update water consumption data",
         "description": "Updates water consumption data for the current user with the specified identifier.",
         "tags": ["Water"],
-        "security": [{ "BearerAuth": [] }],
+        "security": [{ "Bearer": [] }],
         "parameters": [
           {
             "name": "id",
@@ -365,13 +359,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "The operation is successful"
-                    }
-                  }
+                  "$ref": "#/components/schemas/WaterCrudResponse"
                 }
               }
             }
@@ -387,7 +375,7 @@
         "summary": "Delete water consumption data",
         "description": "Deletes water consumption data for the current user with the specified identifier.",
         "tags": ["Water"],
-        "security": [{ "BearerAuth": [] }],
+        "security": [{ "Bearer": [] }],
         "parameters": [
           {
             "name": "id",
@@ -405,13 +393,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "The operation is successful"
-                    }
-                  }
+                  "$ref": "#/components/schemas/WaterCrudResponse"
                 }
               }
             }
@@ -422,12 +404,12 @@
         }
       }
     },
-    "/water/daycosumption/{date}": {
+    "/water/dayconsumption/{date}": {
       "get": {
         "summary": "Get water consumption data by date",
         "description": "Retrieves water consumption data for the current user for the specified date.",
         "tags": ["Water"],
-        "security": [{ "BearerAuth": [] }],
+        "security": [{ "Bearer": [] }],
         "parameters": [
           {
             "name": "date",
@@ -446,34 +428,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "date": {
-                      "type": "string",
-                      "format": "date"
-                    },
-                    "dailyCount": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "amount": {
-                            "type": "number"
-                          },
-                          "time": {
-                            "type": "string",
-                            "format": "time"
-                          },
-                          "_id": {
-                            "type": "string"
-                          }
-                        }
-                      }
-                    },
-                    "_id": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/WaterCrudResponse"
                 }
               }
             }
@@ -489,7 +444,7 @@
         "summary": "Get water consumption data by month",
         "description": "Retrieves water consumption data for the current user for the specified month and year.",
         "tags": ["Water"],
-        "security": [{ "BearerAuth": [] }],
+        "security": [{ "Bearer": [] }],
         "parameters": [
           {
             "name": "date",
@@ -507,37 +462,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "date": {
-                        "type": "string",
-                        "format": "date"
-                      },
-                      "dailyCount": {
-                        "type": "array",
-                        "items": {
-                          "type": "object",
-                          "properties": {
-                            "amount": {
-                              "type": "number"
-                            },
-                            "time": {
-                              "type": "string",
-                              "format": "time"
-                            },
-                            "_id": {
-                              "type": "string"
-                            }
-                          }
-                        }
-                      },
-                      "_id": {
-                        "type": "string"
-                      }
-                    }
-                  }
+                  "$ref": "#/components/schemas/WaterCrudResponseArray"
                 }
               }
             }
@@ -687,6 +612,83 @@
                 "type": "string",
                 "description": "User's access token",
                 "example": "a60b9bed758d12f710d227b82bcc4077..."
+              }
+            }
+          }
+        }
+      },
+      "WaterCrudResponse": {
+        "type": "object",
+        "description": "Water consumption data for the specified date",
+        "properties": {
+          "date": {
+            "type": "string",
+            "description": "Date of the water consumption data",
+            "format": "date",
+            "example": "2024-01-03"
+          },
+          "dailyCount": {
+            "type": "array",
+            "description": "Daily count of water consumption",
+            "items": {
+              "type": "object",
+              "properties": {
+                "amount": {
+                  "type": "number",
+                  "description": "Amount of water consumed",
+                  "example": 500
+                },
+                "time": {
+                  "type": "string",
+                  "description": "Time of water consumption",
+                  "format": "time",
+                  "example": "19:20"
+                },
+                "_id": {
+                  "type": "string",
+                  "description": "Unique identifier of the record",
+                  "example": "664105786ed504010db56e2e"
+                }
+              }
+            }
+          }
+        }
+      },
+      "WaterCrudResponseArray": {
+        "type": "array",
+        "description": "Array of water consumption data",
+        "items": {
+          "type": "object",
+          "properties": {
+            "date": {
+              "type": "string",
+              "description": "Date of the water consumption data",
+              "format": "date",
+              "example": "2024-01-03"
+            },
+            "dailyCount": {
+              "type": "array",
+              "description": "Daily count of water consumption",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "amount": {
+                    "type": "number",
+                    "description": "Amount of water consumed",
+                    "example": 500
+                  },
+                  "time": {
+                    "type": "string",
+                    "description": "Time of water consumption",
+                    "format": "time",
+                    "example": "19:20"
+                  },
+                  "_id": {
+                    "type": "string",
+                    "description": "Unique identifier of the record",
+                    "example": "664105786ed504010db56e2e"
+                  }
+                }
               }
             }
           }

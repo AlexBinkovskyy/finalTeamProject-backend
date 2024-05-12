@@ -1,16 +1,7 @@
 import HttpErrors from '../helpers/HttpError.js'
 import { asyncWrapper } from '../helpers/asyncWrapper.js'
 import { Water } from '../models/waterModel.js'
-import { v4 } from 'uuid'
 
-/**
- * Приклад вхідних даних
- * {
- * 	date: '01.01.2024',
- * 	time: '10:00',
- * 	ammount: 250
- * }
- */
 export const addWater = asyncWrapper(async (req, res, next) => {
   const waterData = req.body
   const { date, time, amount } = waterData
@@ -41,24 +32,15 @@ export const addWater = asyncWrapper(async (req, res, next) => {
     time,
   })
 
-  console.log(waterAmountItem.dailyCount)
-
   if (isNewDate) {
     waterNote.waterAmount.push(waterAmountItem)
   }
 
   waterNote = await Water.create(waterNote)
 
-  res.status(201).json({ message: 'The operation is successful' })
+  res.status(201).json(waterAmountItem)
 })
 
-/**
- * Приклад вхідних даних
- * {
- * 	time: '10:00',
- * 	ammount: 250
- * }
- */
 export const updateWater = asyncWrapper(async (req, res, next) => {
   const ownerId = req.user._id
   const { id } = req.params
@@ -80,13 +62,13 @@ export const updateWater = asyncWrapper(async (req, res, next) => {
 
         delete mergedData._id
         Object.assign(dailyCountItem, mergedData)
-        break
+
+        await findWater.save()
+        res.status(200).json(waterAmountItem)
       }
     }
   }
-
-  await findWater.save()
-  res.status(200).json({ message: 'The operation is successful' })
+  return next(HttpErrors(404))
 })
 
 export const deleteWater = asyncWrapper(async (req, res, next) => {
@@ -106,12 +88,12 @@ export const deleteWater = asyncWrapper(async (req, res, next) => {
 
     if (dailyCountIndex !== -1) {
       waterAmountItem.dailyCount.splice(dailyCountIndex, 1)
-      break
+
+      await findWater.save()
+      res.status(200).json(waterAmountItem)
     }
   }
-
-  await findWater.save()
-  res.status(200).json({ message: 'The operation is successful' })
+  return next(HttpErrors(404))
 })
 
 export const getWaterByDay = asyncWrapper(async (req, res, next) => {
@@ -125,7 +107,6 @@ export const getWaterByDay = asyncWrapper(async (req, res, next) => {
 
   const waterArr = findWater.waterAmount.find(item => item.date === date)
   if (!waterArr) {
-    console.log(waterArr)
     return next(HttpErrors(404))
   }
   res.status(200).json(waterArr)
@@ -137,8 +118,6 @@ export const getWaterByMonth = asyncWrapper(async (req, res, next) => {
   const [month, year] = date.split('.')
 
   const findWater = await Water.findOne({ owner: ownerId })
-
-  console.log(findWater)
 
   if (!findWater) {
     return next(HttpErrors(404))
