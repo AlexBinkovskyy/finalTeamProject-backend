@@ -103,7 +103,20 @@ export const login = async (user) => {
     { token: userToken },
     { new: true }
   ).select("-password -verificationToken");
-  return  loggedUser;
+  return {
+    token: loggedUser.token,
+    user: { id: loggedUser._id,
+      "name": loggedUser.name,
+      "email": loggedUser.email,
+      "gender": loggedUser.gender,
+      "dailyNorma": loggedUser.dailyNorma,
+      "weight": loggedUser.weigth,
+      "activeTyme": loggedUser.activeTime,
+      "goal": loggedUser.goal,
+      "avatarUrl": loggedUser.avatarUrl,
+      "isVerified": loggedUser.isVerified
+     },
+  };
 };
 
 // {
@@ -113,5 +126,5 @@ export const login = async (user) => {
 //       "avatarUrl": "https://finalteamproject-backend.onrender.com/icon/defaultAvatar.png",
 //     },
 //     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2M2U4Y2NiODNhZWVjNTE5N2RiYzAxMSIsImlhdCI6MTcxNTQzODY4MiwiZXhwIjoxNzE1NTI1MDgyfQ.dRCdl3qhlOIKT9jBGFYarwyt408IkKBpxUW5NuSSeeU"
-// 
+//
 //}

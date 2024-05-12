@@ -13,10 +13,10 @@ const userSchema = new Schema(
       required: [true, "Password is required"],
     },
     gender: { type: String, enum: ["male", "female"] },
-    dailyNorma: Number,
+    dailyNorma: {type: Number, default: 1800},
     weigth: Number,
-    activeTime: Number,
-    goal: Number,
+    activeTime: {type: Number,default: 2},
+    goal: {type: Number, default: 1800},
     avatarUrl: {
       type: String,
       default:
