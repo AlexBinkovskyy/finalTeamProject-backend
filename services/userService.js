@@ -105,7 +105,7 @@ export const login = async (user) => {
   ).select("-password -verificationToken");
   return {
     token: loggedUser.token,
-    user: { id: loggedUser._id,
+    user: { _id: loggedUser._id,
       "name": loggedUser.name,
       "email": loggedUser.email,
       "gender": loggedUser.gender,
@@ -118,13 +118,3 @@ export const login = async (user) => {
      },
   };
 };
-
-// {
-//   user:  {
-//       "_id": "663e8ccb83aeec5197dbc011",
-//       "email": "alex_bin@ukr.net",
-//       "avatarUrl": "https://finalteamproject-backend.onrender.com/icon/defaultAvatar.png",
-//     },
-//     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2M2U4Y2NiODNhZWVjNTE5N2RiYzAxMSIsImlhdCI6MTcxNTQzODY4MiwiZXhwIjoxNzE1NTI1MDgyfQ.dRCdl3qhlOIKT9jBGFYarwyt408IkKBpxUW5NuSSeeU"
-//
-//}
