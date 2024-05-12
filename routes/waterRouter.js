@@ -15,23 +15,23 @@ import {
   validateParamsDateMounth,
 } from '../models/validationSchemas/waterValidationSchema.js'
 import validateParams from '../helpers/validateParams.js'
+import { checkId } from '../midleWares/checkId.js'
 // import { asyncWrapper } from '../midleWares/asyncWrapper';
 // import { checkToken } from '../midleWares/checkToken';
 
 const waterRouter = express.Router()
 
-// waterRouter.use((checkToken))
-
 waterRouter.post('/add', validateBody(addWaterDataSchema), protect, addWater)
 waterRouter.put(
   '/edit/:id',
   validateBody(updateWaterDataSchema),
+  checkId,
   protect,
   updateWater
 )
-waterRouter.delete('/delete/:id', protect, deleteWater)
+waterRouter.delete('/delete/:id', checkId, protect, deleteWater)
 waterRouter.get(
-  '/daycosumption/:date',
+  '/dayconsumption/:date',
   validateParams(validateParamsDateDay),
   protect,
   getWaterByDay
