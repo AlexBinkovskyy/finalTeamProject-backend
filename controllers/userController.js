@@ -8,6 +8,7 @@ import {
   emailService,
   findVerifiedToken,
   login,
+  updateUser,
 } from "../services/userService.js";
 
 export const createNewUser = async (req, res, next) => {
@@ -72,4 +73,10 @@ export const getCurrentUserCreds = async (req, res, next) => {
 
 export const upload = async (req, res, next) => {
   uploadImage(req, res)
+}
+
+export const chahgeUserCreds = async (req, res, next) => {
+  const updatedUser = {...req.user._doc, ...req.body };
+  const result = await updateUser(updatedUser);
+  res.json(result)
 }

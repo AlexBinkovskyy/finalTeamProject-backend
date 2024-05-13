@@ -18,3 +18,12 @@ export const resendEmailSchema = Joi.object({
   }),
 });
 
+export const changeUserCredsSchema = Joi.object({
+  name: Joi.string().min(2).max(20),
+  gender: Joi.string().valid("male", "female"),
+  dailyNorma: Joi.number().min(500).max(5000),
+  weigth: Joi.number(),
+  activeTime: Joi.number(),
+  goal: Joi.number(),
+  avatarUrl: Joi.string(),
+});

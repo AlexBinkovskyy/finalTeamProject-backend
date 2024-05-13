@@ -1,10 +1,12 @@
 import express from "express";
 import validateBody from "../helpers/validateBody.js";
 import {
+  changeUserCredsSchema,
   registerLoginUserSchema,
   resendEmailSchema,
 } from "../models/validationSchemas/userValidationSchema.js";
 import {
+  chahgeUserCreds,
   createNewUser,
   getCurrentUserCreds,
   loginUser,
@@ -17,7 +19,7 @@ import {
   checkAuthenticity,
   checkAuthenticityAndLogout,
 } from "../midleWares/checkAuthenticity.js";
-import { uploadImage } from "../midleWares/fileHandler.js";
+import { makeImagePublic, processImage, uploadImage } from "../midleWares/fileHandler.js";
 
 const userRouter = express.Router();
 
@@ -48,7 +50,15 @@ userRouter.get(
   getCurrentUserCreds
 );
 
-userRouter.put("/update", asyncWrapper(checkAuthenticity), uploadImage.single("avatar"));
+userRouter.put(
+  "/update",
+  asyncWrapper(checkAuthenticity),
+  uploadImage.single("avatar"),
+  asyncWrapper(processImage),
+  asyncWrapper(makeImagePublic),
+  validateBody(changeUserCredsSchema),
+  asyncWrapper(chahgeUserCreds)
+);
 
 userRouter.get("/refreshtoken");
 

@@ -105,16 +105,24 @@ export const login = async (user) => {
   ).select("-password -verificationToken");
   return {
     token: loggedUser.token,
-    user: { _id: loggedUser._id,
-      "name": loggedUser.name,
-      "email": loggedUser.email,
-      "gender": loggedUser.gender,
-      "dailyNorma": loggedUser.dailyNorma,
-      "weight": loggedUser.weigth,
-      "activeTyme": loggedUser.activeTime,
-      "goal": loggedUser.goal,
-      "avatarUrl": loggedUser.avatarUrl,
-      "isVerified": loggedUser.isVerified
-     },
+    user: {
+      _id: loggedUser._id,
+      name: loggedUser.name,
+      email: loggedUser.email,
+      gender: loggedUser.gender,
+      dailyNorma: loggedUser.dailyNorma,
+      weight: loggedUser.weigth,
+      activeTyme: loggedUser.activeTime,
+      goal: loggedUser.goal,
+      avatarUrl: loggedUser.avatarUrl,
+      isVerified: loggedUser.isVerified,
+    },
   };
+};
+
+export const updateUser = async (user) => {
+  const result = await User.findByIdAndUpdate(user._id, user, {
+    new: true,
+  }).select("-password -verificationToken");
+  return result;
 };

@@ -1,14 +1,13 @@
 import multer from "multer";
-import path from "node:path";
 import HttpErrors from "../helpers/HttpError.js";
+import { v2 as cloudinary } from "cloudinary";
+import path from "path";
+import fs from "fs/promises";
 
 const tempDirectory = path.resolve("temp");
-
 const multerConfig = multer.diskStorage({
   destination: tempDirectory,
   filename: (req, file, cb) => {
-    console.log("1", JSON.parse(req.body.email).email);
-    console.log("2", file);
     cb(null, file.originalname);
   },
 });
@@ -22,9 +21,49 @@ const filter = (req, file, cb) => {
 };
 
 export const uploadImage = multer({
-    storage: multerConfig,
-    fileFilter: filter,
-    limits: {
-      fileSize: 2 * 1024 * 1024,
-    },
+  storage: multerConfig,
+  fileFilter: filter,
+  limits: {
+    fileSize: 10 * 1024 * 1024,
+  },
+});
+
+export const processImage = async (req, res, next) => {
+  if (req.file === undefined)
+    next(
+      HttpErrors(
+        400,
+        "body must consist from 'avatar' field and attached image"
+      )
+    );
+  req.file.filename = `userID_${req.user._id}_${req.file.fieldname}`;
+  next();
+};
+
+export const makeImagePublic = async (req, res, next) => {
+  cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
   });
+
+  req.user.avatarUrl = await cloudinary.uploader
+    .upload(req.file.path, { public_id: req.file.filename })
+    .then((res) =>
+      cloudinary.url(res.public_id, {
+        fetch_format: "auto",
+        quality: "auto",
+        crop: "fill",
+        gravity: "faces:auto",
+        width: 100,
+        height: 100,
+        radius: "max",
+        effect: "sharpen:100",
+      })
+    )
+    .catch((error) => {
+      console.log(error);
+    });
+   fs.unlink(path.join(tempDirectory, req.file.originalname));
+  next();
+};
