@@ -266,7 +266,52 @@
       }
     },
 
-    "/users/:userId": {},
+    "/users/update": {
+      "put": {
+        "tags": ["Users"],
+        "summary": "Update users settings",
+        "parameters": [],
+        "requestBody": {
+          "description": "Example of required naming of fields",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/updateUserDataRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/updateUserDataResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Rejected opration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Not authorized"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
     "/users/refreshtoken": {},
 
     "/water/add": {
@@ -617,6 +662,110 @@
           }
         }
       },
+      "updateUserDataRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 20,
+            "example": "Josh Broling"
+          },
+          "gender": {
+            "type": "string",
+            "enum": ["male", "female"],
+            "example": "'male' or 'female' only"
+          },
+          "dailyNorma": {
+            "type": "number",
+            "minimum": 500,
+            "maximum": 5000,
+            "example": "range from 500 to 5000"
+          },
+          "weight": {
+            "type": "number",
+            "example": 60
+          },
+          "activeTime": {
+            "type": "number",
+            "example": 2
+          },
+          "goal": {
+            "type": "number",
+            "description": "user's goal of water consumption due day, L",
+            "example": "2"
+          },
+          "avatar": {
+            "type": "string",
+            "format": "binary",
+            "example": "d:/images/example_avatar.jpg",
+            "description": "file with image format, such as jpeg, png, gif etc.. and max weigth for aprox. 10Mb",
+            "content": {
+              "image/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary",
+                  "maxLength": 10485760
+                }
+              }
+            }
+          }
+        }
+      },
+      "updateUserDataResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "JWT access token",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDBkNDc1..."
+          },
+          "user": {
+            "type": "object",
+            "properties": {
+              "_id": {
+                "type": "string",
+                "description": "Unique users identifier",
+                "example": "6640d475a1f0ed15ds777553"
+              },
+              "name": {
+                "type": "string",
+                "example": "Josh Broling"
+              },
+              "email": {
+                "type": "string",
+                "example": "example@test.net"
+              },
+              "gender": {
+                "type": "string",
+                "enum": ["male", "female"],
+                "example": "male"
+              },
+              "dailyNorma": {
+                "type": "number",
+                "example": "1500"
+              },
+              "weight": {
+                "type": "number",
+                "example": 60
+              },
+              "activeTime": {
+                "type": "number",
+                "example": 2
+              },
+              "goal": {
+                "type": "number",
+                "example": "2"
+              },
+              "avatar": {
+                "type": "string",
+                "example": "https://finalteamproject-backend.onrender.com/icon/defaultAvatar.png"
+              }
+            }
+          }
+        }
+      },
+
       "WaterCrudResponse": {
         "type": "object",
         "description": "Water consumption data for the specified date",

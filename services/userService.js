@@ -4,13 +4,10 @@ import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import { htmlTemplate } from "../helpers/statickHtml/htmlTemplate.js";
+import { passRecoveryHtmlTemplate } from "../helpers/statickHtml/passRecovetyHtmlTemplate.js";
 
-export const checkUserByEmail = async ({ email }) => {
-  return await User.findOne(
-    { email }
-    // { password: 1, email: 1, verify: 1, verificationToken: 1, token: 1 }
-  );
-};
+export const checkUserByEmail = async ({ email }) =>
+  await User.findOne({ email });
 
 export const createUser = async (userData) => {
   userData.password = await bcrypt.hash(userData.password, 10);
@@ -29,6 +26,14 @@ const updateUserWithToken = async (newUser, id) =>
   (newUser.token = jwt.sign({ id }, process.env.SECRET_KEY, {
     expiresIn: "24h",
   }));
+
+const createResetPasswordToken = (user) => {
+  const resetToken = jwt.sign({ id: user.id }, process.env.SECRET_KEY, {
+    expiresIn: "5min",
+  });
+  user.resetToken = resetToken;
+  return user;
+};
 
 export const findVerifiedToken = async (verificationToken) => {
   return await User.findOne(
@@ -59,9 +64,7 @@ export const deleteTokenFromUser = async (userData) => {
 };
 
 export const emailService = async (user) => {
-  const { email, verificationToken, token } = user;
-
-  const config = {
+  const emailConfig = {
     host: process.env.POST_SERVICE_HOST,
     port: process.env.POST_SERVICE_PORT,
     secure: true,
@@ -71,14 +74,47 @@ export const emailService = async (user) => {
     },
   };
 
-  const transporter = nodemailer.createTransport(config);
+  const { email, verificationToken, token } = user;
+
+  const transporter = nodemailer.createTransport(emailConfig);
   const emailOptions = {
     from: process.env.POST_SERVICE_USER,
     to: email,
     subject: "EMAIL VERIFICATION CODE",
     text: "verivication link",
-    html: htmlTemplate(
+    html: passRecoveryHtmlTemplate(
       `https://finalteamproject-backend.onrender.com/confirm.html?${verificationToken}&${token}`
+      // `http://localhost:10000/confirm.html?${verificationToken}&${token}`
+    ),
+  };
+  await transporter
+    .sendMail(emailOptions)
+    .then((info) => console.log(info))
+    .catch((err) => console.log(err));
+};
+
+export const recoveryEmailService = async (user) => {
+  const emailConfig = {
+    host: process.env.POST_SERVICE_HOST,
+    port: process.env.POST_SERVICE_PORT,
+    secure: true,
+    auth: {
+      user: process.env.POST_SERVICE_USER,
+      pass: process.env.POST_SERVICE_PASSWORD,
+    },
+  };
+
+  const result = createResetPasswordToken(user);
+  updateUser(result);
+
+  const transporter = nodemailer.createTransport(emailConfig);
+  const emailOptions = {
+    from: process.env.POST_SERVICE_USER,
+    to: user.email,
+    subject: "Password recovery link",
+    text: "Password recovery link",
+    html: passRecoveryHtmlTemplate(
+      `https://finalteamproject-backend.onrender.com/resetPass.html?${result.resetToken}`
       // `http://localhost:10000/confirm.html?${verificationToken}&${token}`
     ),
   };
@@ -123,6 +159,6 @@ export const login = async (user) => {
 export const updateUser = async (user) => {
   const result = await User.findByIdAndUpdate(user._id, user, {
     new: true,
-  }).select("-password -verificationToken");
+  }).select("-password -verificationToken -resetToken");
   return result;
 };

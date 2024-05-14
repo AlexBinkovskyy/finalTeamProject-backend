@@ -29,18 +29,13 @@ export const uploadImage = multer({
 });
 
 export const processImage = async (req, res, next) => {
-  if (req.file === undefined)
-    next(
-      HttpErrors(
-        400,
-        "body must consist from 'avatar' field and attached image"
-      )
-    );
+  if (req.file === undefined)return next();
   req.file.filename = `userID_${req.user._id}_${req.file.fieldname}`;
   next();
 };
 
 export const makeImagePublic = async (req, res, next) => {
+  if (req.file === undefined)return next();
   cloudinary.config({
     cloud_name: process.env.CLOUDINARY_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
@@ -62,8 +57,8 @@ export const makeImagePublic = async (req, res, next) => {
       })
     )
     .catch((error) => {
-      console.log(error);
+      next(error);
     });
-   fs.unlink(path.join(tempDirectory, req.file.originalname));
+  fs.unlink(path.join(tempDirectory, req.file.originalname));
   next();
 };

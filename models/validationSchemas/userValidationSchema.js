@@ -27,3 +27,10 @@ export const changeUserCredsSchema = Joi.object({
   goal: Joi.number(),
   avatarUrl: Joi.string(),
 });
+
+export const emailSendPassRecoverySchema = Joi.object({
+  email: Joi.string().email({ minDomainSegments: 2 }).required().messages({
+    "string.email": "Uncorrect email name or domain",
+    "any.required": "Missed required email field",
+  }),
+});

@@ -2,12 +2,14 @@ import express from "express";
 import validateBody from "../helpers/validateBody.js";
 import {
   changeUserCredsSchema,
+  emailSendPassRecoverySchema,
   registerLoginUserSchema,
   resendEmailSchema,
 } from "../models/validationSchemas/userValidationSchema.js";
 import {
   chahgeUserCreds,
   createNewUser,
+  emailPassRecoveryController,
   getCurrentUserCreds,
   loginUser,
   sendVerificationEmail,
@@ -19,7 +21,11 @@ import {
   checkAuthenticity,
   checkAuthenticityAndLogout,
 } from "../midleWares/checkAuthenticity.js";
-import { makeImagePublic, processImage, uploadImage } from "../midleWares/fileHandler.js";
+import {
+  makeImagePublic,
+  processImage,
+  uploadImage,
+} from "../midleWares/fileHandler.js";
 
 const userRouter = express.Router();
 
@@ -44,6 +50,8 @@ userRouter.post(
   asyncWrapper(loginUser)
 );
 
+userRouter.post("/logout", asyncWrapper(checkAuthenticityAndLogout));
+
 userRouter.get(
   "/current",
   asyncWrapper(checkAuthenticity),
@@ -60,8 +68,18 @@ userRouter.put(
   asyncWrapper(chahgeUserCreds)
 );
 
+userRouter.post(
+  "/passrecovery",
+  validateBody(emailSendPassRecoverySchema),
+  asyncWrapper(emailPassRecoveryController)
+);
+
+userRouter.get(
+  "/passrecovery/:recoveryToken"
+);
+
 userRouter.get("/refreshtoken");
 
-userRouter.post("/logout", asyncWrapper(checkAuthenticityAndLogout));
+
 
 export default userRouter;
