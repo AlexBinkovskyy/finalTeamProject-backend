@@ -43,11 +43,51 @@
           },
           "400": {
             "description": "Bad request (invalid request body)",
-            "content": {}
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Bad request (invalid request body)"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "User not found"
+                    }
+                  }
+                }
+              }
+            }
           },
           "409": {
-            "description": "Provided email already exists",
-            "content": {}
+            "description": "Current email already in use",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Current email already in use"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -74,15 +114,15 @@
             "description": "Successful operation",
             "content": {
               "application/json": {
-                "type": "object",
-                "properties": {
-                  "email": {
-                    "type": "string",
-                    "description": "Email address of the user"
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
                   },
-                  "message": {
-                    "type": "string",
-                    "description": "Message indicating the action performed"
+                  "example": {
+                    "message": "Verification successful"
                   }
                 }
               }
@@ -90,11 +130,35 @@
           },
           "400": {
             "description": "Bad request (invalid request body)",
-            "content": {}
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Bad request (invalid request body)"
+                    }
+                  }
+                }
+              }
+            }
           },
           "404": {
             "description": "User not found",
-            "content": {}
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "User not found"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -142,13 +206,21 @@
               }
             }
           },
-          "400": {
-            "description": "Bad request (invalid request body)",
-            "content": {}
-          },
           "404": {
             "description": "User not found",
-            "content": {}
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "User not found"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -176,7 +248,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LogInResponse"
+                  "$ref": "#/components/schemas/getUserDataResponse"
                 }
               }
             }
@@ -257,7 +329,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetCurrentResponse"
+                  "$ref": "#/components/schemas/getUserDataResponse"
                 }
               }
             }
@@ -287,7 +359,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/updateUserDataResponse"
+                  "$ref": "#/components/schemas/getUserDataResponse"
                 }
               }
             }
@@ -599,69 +671,6 @@
           }
         }
       },
-      "GetCurrentResponse": {
-        "type": "object",
-        "description": "Response object of current user",
-        "properties": {
-          "user": {
-            "type": "object",
-            "properties": {
-              "_id": {
-                "type": "string",
-                "description": "Users ID",
-                "example": "a60b9bed758d12f710d227b82bcc4077"
-              },
-              "name": {
-                "type": "string",
-                "description": "Users name",
-                "example": "Barbara Straisand, uwe-owee-ooo-weee"
-              },
-              "email": {
-                "type": "string",
-                "description": "User's email",
-                "format": "email",
-                "example": "example@test.net"
-              },
-              "gender": {
-                "type": "string",
-                "description": "User gender",
-                "example": "male or female"
-              },
-              "dailyNorma": {
-                "type": "number",
-                "description": "Users counted daily norma of water",
-                "example": "1.8"
-              },
-              "weight": {
-                "type": "number",
-                "description": "Users weight",
-                "example": "60"
-              },
-              "activeTime": {
-                "type": "number",
-                "description": "Users active time",
-                "example": "2"
-              },
-              "goal": {
-                "type": "string",
-                "description": "Users water consumotion goal",
-                "example": "2.2"
-              },
-              "avatarUrl": {
-                "type": "string",
-                "description": "User's avatar URL",
-                "format": "url",
-                "example": "https://finalteamproject-backend.onrender.com/icon/defaultAvatar.png"
-              },
-              "token": {
-                "type": "string",
-                "description": "User's access token",
-                "example": "a60b9bed758d12f710d227b82bcc4077..."
-              }
-            }
-          }
-        }
-      },
       "updateUserDataRequest": {
         "type": "object",
         "properties": {
@@ -712,7 +721,7 @@
           }
         }
       },
-      "updateUserDataResponse": {
+      "getUserDataResponse": {
         "type": "object",
         "properties": {
           "token": {
