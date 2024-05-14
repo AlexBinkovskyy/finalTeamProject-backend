@@ -330,7 +330,7 @@
                   "date": {
                     "type": "string",
                     "format": "date",
-                    "example": "2024-01-01"
+                    "example": "01.01.2024"
                   },
                   "time": {
                     "type": "string",
@@ -459,7 +459,7 @@
           {
             "name": "date",
             "in": "path",
-            "description": "Date to retrieve water consumption data (format: 'YYYY-MM-DD')",
+            "description": "Date to retrieve water consumption data (format: 'dd.mm.yyyy')",
             "required": true,
             "schema": {
               "type": "string",
@@ -494,7 +494,7 @@
           {
             "name": "date",
             "in": "path",
-            "description": "Month and year to retrieve water consumption data (format: 'YYYY.MM')",
+            "description": "Month and year to retrieve water consumption data (format: 'mm.yyyy')",
             "required": true,
             "schema": {
               "type": "string"
@@ -774,7 +774,7 @@
             "type": "string",
             "description": "Date of the water consumption data",
             "format": "date",
-            "example": "2024-01-03"
+            "example": "03.01.2024"
           },
           "dailyCount": {
             "type": "array",
@@ -813,7 +813,7 @@
               "type": "string",
               "description": "Date of the water consumption data",
               "format": "date",
-              "example": "2024-01-03"
+              "example": "03.01.2024"
             },
             "dailyCount": {
               "type": "array",
