@@ -1,5 +1,6 @@
 import HttpError from "../helpers/HttpError.js";
 import { uploadImage } from "../midleWares/fileHandler.js";
+import { User } from "../models/userModel.js";
 import {
   changeVerificationCreds,
   checkUserByEmail,
@@ -112,4 +113,12 @@ export const emailPassRecoveryController = async (req, res, nex) => {
 
 export const recoveryPasswordController = async (req, res, next) => {
   
+}
+
+export const getAllUsers = async (req, res, next) => {
+  const allUsers = await User.find().select({avatarUrl: 1, _id: 0})
+  res.json({
+    userCount: allUsers.length,
+    userAvatars: allUsers
+  })
 }
