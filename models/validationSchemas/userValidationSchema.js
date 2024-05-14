@@ -29,7 +29,7 @@ export const changeUserCredsSchema = Joi.object({
   weight: Joi.number(),
   activeTime: Joi.number(),
   goal: Joi.number(),
-  avatarUrl: Joi.string(),
+  avatar: Joi.string(),
 });
 
 export const emailSendPassRecoverySchema = Joi.object({
