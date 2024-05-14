@@ -109,3 +109,7 @@ export const emailPassRecoveryController = async (req, res, nex) => {
     message: "Recovery instructions was sent to provided email",
   });
 };
+
+export const recoveryPasswordController = async (req, res, next) => {
+  
+}

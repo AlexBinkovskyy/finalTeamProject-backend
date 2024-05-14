@@ -176,7 +176,9 @@ export const passRecoveryHtmlTemplate = (link) => {
             <!-- start copy -->
             <tr>
               <td align="left" bgcolor="#ffffff" style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-                <p style="margin: 0;">Tap the button below to start change your password form "AquaTracker". If you didn't create an account with https://alexbinkovskyy.github.io/finalTeamProject, you can safely delete this email.</p>
+                <p style="margin: 0;">Tap the button below to start change your password form "AquaTracker". If you didn't create an account with
+                <a href="https://alexbinkovskyy.github.io/finalTeamProject" target="_blank">AquaTracker</a> , you can safely delete this email.
+                <strong>Note, that this email is valid among 5 minutes, after that time you must to start recovery procedure again from <a href="https://alexbinkovskyy.github.io/finalTeamProject" target="_blank">AquaTracker</a> page.</strong> </p>
               </td>
             </tr>
             <!-- end copy -->

@@ -74,9 +74,7 @@ userRouter.post(
   asyncWrapper(emailPassRecoveryController)
 );
 
-userRouter.get(
-  "/passrecovery/:recoveryToken"
-);
+userRouter.get("/passrecovery");
 
 userRouter.get("/refreshtoken");
 
