@@ -10,6 +10,7 @@ import {
   chahgeUserCreds,
   createNewUser,
   emailPassRecoveryController,
+  getAllUsers,
   getCurrentUserCreds,
   loginUser,
   sendVerificationEmail,
@@ -74,12 +75,10 @@ userRouter.post(
   asyncWrapper(emailPassRecoveryController)
 );
 
-userRouter.get(
-  "/passrecovery/:recoveryToken"
-);
+userRouter.get("/passrecovery");
 
 userRouter.get("/refreshtoken");
 
-
+userRouter.get("/getusers", getAllUsers)
 
 export default userRouter;

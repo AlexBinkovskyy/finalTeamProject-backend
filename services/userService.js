@@ -3,8 +3,8 @@ import nodemailer from "nodemailer";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
+// import { passRecoveryHtmlTemplate } from "../helpers/statickHtml/passRecovetyHtmlTemplate.js";
 import { htmlTemplate } from "../helpers/statickHtml/htmlTemplate.js";
-import { passRecoveryHtmlTemplate } from "../helpers/statickHtml/passRecovetyHtmlTemplate.js";
 
 export const checkUserByEmail = async ({ email }) =>
   await User.findOne({ email });
@@ -82,7 +82,7 @@ export const emailService = async (user) => {
     to: email,
     subject: "EMAIL VERIFICATION CODE",
     text: "verivication link",
-    html: passRecoveryHtmlTemplate(
+    html: htmlTemplate(
       `https://finalteamproject-backend.onrender.com/confirm.html?${verificationToken}&${token}`
       // `http://localhost:10000/confirm.html?${verificationToken}&${token}`
     ),
@@ -114,7 +114,7 @@ export const recoveryEmailService = async (user) => {
     subject: "Password recovery link",
     text: "Password recovery link",
     html: passRecoveryHtmlTemplate(
-      `https://finalteamproject-backend.onrender.com/resetPass.html?${result.resetToken}`
+      result.resetToken
       // `http://localhost:10000/confirm.html?${verificationToken}&${token}`
     ),
   };

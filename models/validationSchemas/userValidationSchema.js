@@ -19,10 +19,14 @@ export const resendEmailSchema = Joi.object({
 });
 
 export const changeUserCredsSchema = Joi.object({
+  email: Joi.string().email({ minDomainSegments: 2 }).messages({
+    "string.email": "Uncorrect email name or domain",
+    "any.required": "Missed required email field",
+  }),
   name: Joi.string().min(2).max(20),
   gender: Joi.string().valid("male", "female"),
   dailyNorma: Joi.number().min(500).max(5000),
-  weigth: Joi.number(),
+  weight: Joi.number(),
   activeTime: Joi.number(),
   goal: Joi.number(),
   avatarUrl: Joi.string(),

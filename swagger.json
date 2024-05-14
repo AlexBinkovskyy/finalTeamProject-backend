@@ -383,6 +383,43 @@
         }
       }
     },
+    "/users/getusers": {
+      "get": {
+        "summary": "Returns totall ammount of users stored in DB and array of user's avatars",
+        "tags": ["Users"],
+        "responses": {
+          "200": {
+            "description": "Successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "userCount": {
+                      "type": "number",
+                      "example": 225
+                    },
+                    "userAvatars": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "avatarUrl": {
+                            "type": "string",
+                            "format": "uri",
+                            "example": "https://finalteamproject-backend.onrender.com/icon/defaultAvatar.png"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
 
     "/users/refreshtoken": {},
 

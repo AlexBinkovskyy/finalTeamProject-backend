@@ -1,5 +1,6 @@
 import HttpError from "../helpers/HttpError.js";
 import { uploadImage } from "../midleWares/fileHandler.js";
+import { User } from "../models/userModel.js";
 import {
   changeVerificationCreds,
   checkUserByEmail,
@@ -65,8 +66,8 @@ export const getCurrentUserCreds = async (req, res, next) => {
       email: req.user.email,
       gender: req.user.gender,
       dailyNorma: req.user.dailyNorma,
-      weight: req.user.weigth,
-      activeTyme: req.user.activeTime,
+      weight: req.user.weight,
+      activeTime: req.user.activeTime,
       goal: req.user.goal,
       avatarUrl: req.user.avatarUrl,
       isVerified: req.user.isVerified,
@@ -89,8 +90,8 @@ export const chahgeUserCreds = async (req, res, next) => {
       email: req.user.email,
       gender: req.user.gender,
       dailyNorma: req.user.dailyNorma,
-      weight: req.user.weigth,
-      activeTyme: req.user.activeTime,
+      weight: req.user.weight,
+      activeTime: req.user.activeTime,
       goal: req.user.goal,
       avatarUrl: req.user.avatarUrl,
       isVerified: req.user.isVerified,
@@ -109,3 +110,15 @@ export const emailPassRecoveryController = async (req, res, nex) => {
     message: "Recovery instructions was sent to provided email",
   });
 };
+
+export const recoveryPasswordController = async (req, res, next) => {
+  
+}
+
+export const getAllUsers = async (req, res, next) => {
+  const allUsers = await User.find().select({avatarUrl: 1, _id: 0})
+  res.json({
+    userCount: allUsers.length,
+    userAvatars: allUsers
+  })
+}
