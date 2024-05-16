@@ -14,7 +14,7 @@ const userSchema = new Schema(
     },
     gender: { type: String, enum: ["male", "female"] },
     dailyNorma: {type: Number, default: 1800},
-    weigth: Number,
+    weight: Number,
     activeTime: {type: Number,default: 2},
     goal: {type: Number, default: 1800},
     avatarUrl: {
@@ -28,6 +28,7 @@ const userSchema = new Schema(
       type: String,
       required: [true, "Verify token is required"],
     },
+    resetToken: {type: String, default: null},
   },
   { versionKey: false, timestamps: false }
 );

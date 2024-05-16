@@ -1,13 +1,20 @@
 import express from "express";
 import validateBody from "../helpers/validateBody.js";
 import {
+  changeUserCredsSchema,
+  emailSendPassRecoverySchema,
+  passrecoverySchema,
   registerLoginUserSchema,
   resendEmailSchema,
 } from "../models/validationSchemas/userValidationSchema.js";
 import {
+  chahgeUserCreds,
   createNewUser,
+  emailPassRecoveryController,
+  getAllUsers,
   getCurrentUserCreds,
   loginUser,
+  recoveryPasswordController,
   sendVerificationEmail,
   upload,
   verificationTokenCheck,
@@ -17,7 +24,11 @@ import {
   checkAuthenticity,
   checkAuthenticityAndLogout,
 } from "../midleWares/checkAuthenticity.js";
-import { uploadImage } from "../midleWares/fileHandler.js";
+import {
+  makeImagePublic,
+  processImage,
+  uploadImage,
+} from "../midleWares/fileHandler.js";
 
 const userRouter = express.Router();
 
@@ -42,16 +53,38 @@ userRouter.post(
   asyncWrapper(loginUser)
 );
 
+userRouter.post("/logout", asyncWrapper(checkAuthenticityAndLogout));
+
 userRouter.get(
   "/current",
   asyncWrapper(checkAuthenticity),
   getCurrentUserCreds
 );
 
-userRouter.put("/update", asyncWrapper(checkAuthenticity), uploadImage.single("avatar"));
+userRouter.put(
+  "/update",
+  asyncWrapper(checkAuthenticity),
+  uploadImage.single("avatar"),
+  asyncWrapper(processImage),
+  asyncWrapper(makeImagePublic),
+  validateBody(changeUserCredsSchema),
+  asyncWrapper(chahgeUserCreds)
+);
+
+userRouter.post(
+  "/passrecovery",
+  validateBody(emailSendPassRecoverySchema),
+  asyncWrapper(emailPassRecoveryController)
+);
+
+userRouter.patch(
+  "/passrecovery",
+  validateBody(passrecoverySchema),
+  asyncWrapper(recoveryPasswordController)
+);
 
 userRouter.get("/refreshtoken");
 
-userRouter.post("/logout", asyncWrapper(checkAuthenticityAndLogout));
+userRouter.get("/getusers", getAllUsers);
 
 export default userRouter;
