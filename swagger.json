@@ -1002,6 +1002,16 @@
                 }
               }
             }
+          },
+          "totalWater": {
+            "type": "number",
+            "description": "Total amount of water consumed on the date",
+            "example": 500
+          },
+          "waterRecordsAmount": {
+            "type": "number",
+            "description": "Number of water consumption records for the date",
+            "example": 1
           }
         }
       },
@@ -1041,6 +1051,16 @@
                   }
                 }
               }
+            },
+            "totalWater": {
+              "type": "number",
+              "description": "Total amount of water consumed on the date",
+              "example": 500
+            },
+            "waterRecordsAmount": {
+              "type": "number",
+              "description": "Number of water consumption records for the date",
+              "example": 1
             }
           }
         }
