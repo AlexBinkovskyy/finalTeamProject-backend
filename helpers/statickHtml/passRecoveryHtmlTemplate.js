@@ -127,10 +127,7 @@ export const passRecoveryHtmlTemplate = (token) => {
           <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
             <tr>
               <td align="center" valign="top" style="padding: 36px 24px;">
-                <a href="https://alexbinkovskyy.github.io/finalTeamProject/" target="_blank" style="display: inline-block;">
-                  <img src="https://finalteamproject-backend.onrender.com/favicon.ico" alt="Logo" border="0" width="48" style="display: block; width: 48px; max-width: 48px; min-width: 48px;">
-                </a>
-              </td>
+          </td>
             </tr>
           </table>
           <!--[if (gte mso 9)|(IE)]>
@@ -192,7 +189,7 @@ export const passRecoveryHtmlTemplate = (token) => {
                     <td align="center" bgcolor="#ffffff" style="padding: 12px; width: 100%;">
                       <table border="0" cellpadding="0" cellspacing="0" width="100%">
                         <tr>
-                          <td align="center" bgcolor="#1a82e2" style="border-radius: 6px; padding: 12px; word-wrap: break-word; width: 100%;">
+                          <td align="center" bgcolor="#9be1a0" style="border-radius: 6px; padding: 12px; word-wrap: break-word; width: 100%;">
                            ${formattedToken}  
                           </td>
                         </tr>

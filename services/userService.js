@@ -111,7 +111,7 @@ export const recoveryEmailService = async (user) => {
   const transporter = nodemailer.createTransport(emailConfig);
   const emailOptions = {
     from: process.env.POST_SERVICE_USER,
-    to: user.email,
+    to: result.email,
     subject: "Password recovery code",
     text: "Password recovery code",
     html: passRecoveryHtmlTemplate(
