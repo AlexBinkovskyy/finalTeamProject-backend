@@ -115,7 +115,7 @@ export const recoveryEmailService = async (user) => {
     subject: "Password recovery code",
     text: "Password recovery code",
     html: passRecoveryHtmlTemplate(
-      result.resetToken.split('.')),
+      result.resetToken),
   };
   await transporter
     .sendMail(emailOptions)
@@ -158,6 +158,6 @@ export const login = async (user) => {
 export const updateUser = async (user) => {
   const result = await User.findByIdAndUpdate(user._id, user, {
     new: true,
-  }).select("resetToken email");
+  }).select("-verificationToken -password");
   return result;
 };

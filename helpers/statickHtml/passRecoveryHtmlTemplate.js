@@ -1,4 +1,7 @@
 export const passRecoveryHtmlTemplate = (token) => {
+  // Вставити розриви рядків у токен кожні 50 символів
+  const formattedToken = token.match(/.{1,50}/g).join('<br>');
+
   return `<!DOCTYPE html>
   <html>
   <head>
@@ -99,11 +102,6 @@ export const passRecoveryHtmlTemplate = (token) => {
       border: 0;
       outline: none;
     }
-
-    .token-container {
-      word-break: break-all;
-      word-wrap: break-word;
-    }
     </style>
   
   </head>
@@ -180,8 +178,8 @@ export const passRecoveryHtmlTemplate = (token) => {
   
             <!-- start copy -->
             <tr>
-              <td align="left" bgcolor="#ffffff" style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px; width: 600;">
-                <p style="margin: 0;">Copy tne reset password code from the field below. If you didn't make a request a password recovery procedure from <a href="https://alexbinkovskyy.github.io/finalTeamProject/" target="_blank">AquaTracker</a>, you can safely delete this email.</p>
+              <td align="left" bgcolor="#ffffff" style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px; width="600"">
+                <p style="margin: 0; ">Copy the reset password code from field below. If you didn't request a password recovery procedure from <a href="https://alexbinkovskyy.github.io/finalTeamProject/" target="_blank">AquaTracker</a>, you can safely delete this email.</p>
               </td>
             </tr>
             <!-- end copy -->
@@ -194,8 +192,8 @@ export const passRecoveryHtmlTemplate = (token) => {
                     <td align="center" bgcolor="#ffffff" style="padding: 12px; width: 100%;">
                       <table border="0" cellpadding="0" cellspacing="0" width="100%">
                         <tr>
-                          <td align="center" class="token-container" style="border-radius: 6px; padding: 12px; word-break: break-all; word-wrap: break-word; width: 100%;">
-                            <strong> ${token}</strong> 
+                          <td align="center" bgcolor="#1a82e2" style="border-radius: 6px; padding: 12px; word-wrap: break-word; width: 100%;">
+                           ${formattedToken}  
                           </td>
                         </tr>
                       </table>
@@ -209,8 +207,8 @@ export const passRecoveryHtmlTemplate = (token) => {
             <!-- start copy -->
             <tr>
               <td align="left" bgcolor="#ffffff" style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-                <p style="margin: 0;">Note that the code will be available for about 5 minutes. If this period expires, you must start the recovery procedure once again from <a href="https://alexbinkovskyy.github.io/finalTeamProject/" target="_blank">AquaTracker</a>.</p>
-              </td>
+                <p style="margin: 0;">Note, that code would be available for about 5 minutes, if this period will gone, you must to start recovery procedure once again from <a href="https://alexbinkovskyy.github.io/finalTeamProject/" target="_blank">AquaTracker</a></p>
+               </td>
             </tr>
             <!-- end copy -->
   
@@ -253,7 +251,7 @@ export const passRecoveryHtmlTemplate = (token) => {
             <!-- start unsubscribe -->
             <tr>
               <td align="center" bgcolor="#e9ecef" style="padding: 12px 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 20px; color: #666;">
-                <p style="margin: 0;">Email register service, Ukraine, Lviv, 79000</p>
+              <p style="margin: 0;">Email register service, Ukraine, Lviv, 79000</p>
               </td>
             </tr>
             <!-- end unsubscribe -->
