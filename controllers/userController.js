@@ -33,9 +33,10 @@ export const verificationTokenCheck = async (req, res, next) => {
 
 export const sendVerificationEmail = async (req, res, next) => {
   const user = await checkUserByEmail(req.body);
-
+  console.log(user);
   if (!user) throw HttpError(404, "User not found");
-  if (!user.email) throw HttpError(400, "missing required field email");
+  if (!user.email ) throw HttpError(400, "missing required field email");
+  if(user.isVerified) throw HttpError(401)
 
   await emailService(user);
 
