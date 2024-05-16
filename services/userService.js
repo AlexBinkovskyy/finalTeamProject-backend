@@ -5,6 +5,7 @@ import crypto from "crypto";
 import jwt from "jsonwebtoken";
 // import { passRecoveryHtmlTemplate } from "../helpers/statickHtml/passRecovetyHtmlTemplate.js";
 import { htmlTemplate } from "../helpers/statickHtml/htmlTemplate.js";
+import { passRecoveryHtmlTemplate } from "../helpers/statickHtml/passRecoveryHtmlTemplate.js";
 
 export const checkUserByEmail = async ({ email }) =>
   await User.findOne({ email });
@@ -104,19 +105,17 @@ export const recoveryEmailService = async (user) => {
     },
   };
 
-  const result = createResetPasswordToken(user);
-  updateUser(result);
+  let result = createResetPasswordToken(user);
+  result = await updateUser(result);
 
   const transporter = nodemailer.createTransport(emailConfig);
   const emailOptions = {
     from: process.env.POST_SERVICE_USER,
     to: user.email,
-    subject: "Password recovery link",
-    text: "Password recovery link",
+    subject: "Password recovery code",
+    text: "Password recovery code",
     html: passRecoveryHtmlTemplate(
-      result.resetToken
-      // `http://localhost:10000/confirm.html?${verificationToken}&${token}`
-    ),
+      result.resetToken.split('.')),
   };
   await transporter
     .sendMail(emailOptions)
@@ -159,6 +158,6 @@ export const login = async (user) => {
 export const updateUser = async (user) => {
   const result = await User.findByIdAndUpdate(user._id, user, {
     new: true,
-  }).select("-password -verificationToken -resetToken");
+  }).select("resetToken email");
   return result;
 };
