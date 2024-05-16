@@ -3,6 +3,7 @@ import validateBody from "../helpers/validateBody.js";
 import {
   changeUserCredsSchema,
   emailSendPassRecoverySchema,
+  passrecoverySchema,
   registerLoginUserSchema,
   resendEmailSchema,
 } from "../models/validationSchemas/userValidationSchema.js";
@@ -13,6 +14,7 @@ import {
   getAllUsers,
   getCurrentUserCreds,
   loginUser,
+  recoveryPasswordController,
   sendVerificationEmail,
   upload,
   verificationTokenCheck,
@@ -75,10 +77,14 @@ userRouter.post(
   asyncWrapper(emailPassRecoveryController)
 );
 
-userRouter.get("/passrecovery");
+userRouter.patch(
+  "/passrecovery",
+  validateBody(passrecoverySchema),
+  asyncWrapper(recoveryPasswordController)
+);
 
 userRouter.get("/refreshtoken");
 
-userRouter.get("/getusers", getAllUsers)
+userRouter.get("/getusers", getAllUsers);
 
 export default userRouter;

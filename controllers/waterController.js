@@ -1,4 +1,4 @@
-import HttpErrors from '../helpers/HttpError.js'
+import HttpError from '../helpers/HttpError.js'
 import { asyncWrapper } from '../helpers/asyncWrapper.js'
 import { Water } from '../models/waterModel.js'
 
@@ -49,7 +49,7 @@ export const updateWater = asyncWrapper(async (req, res, next) => {
   const findWater = await Water.findOne({ owner: ownerId })
 
   if (!findWater) {
-    return next(HttpErrors(404))
+    return next(HttpError(404))
   }
 
   for (const waterAmountItem of findWater.waterAmount) {
@@ -68,7 +68,7 @@ export const updateWater = asyncWrapper(async (req, res, next) => {
       }
     }
   }
-  return next(HttpErrors(404))
+  return next(HttpError(404))
 })
 
 export const deleteWater = asyncWrapper(async (req, res, next) => {
@@ -78,7 +78,7 @@ export const deleteWater = asyncWrapper(async (req, res, next) => {
   const findWater = await Water.findOne({ owner: ownerId })
 
   if (!findWater) {
-    return next(HttpErrors(404))
+    return next(HttpError(404))
   }
 
   for (const waterAmountItem of findWater.waterAmount) {
@@ -93,7 +93,7 @@ export const deleteWater = asyncWrapper(async (req, res, next) => {
       res.status(200).json(waterAmountItem)
     }
   }
-  return next(HttpErrors(404))
+  return next(HttpError(404))
 })
 
 export const getWaterByDay = asyncWrapper(async (req, res, next) => {
@@ -102,12 +102,12 @@ export const getWaterByDay = asyncWrapper(async (req, res, next) => {
 
   const findWater = await Water.findOne({ owner: ownerId })
   if (!findWater) {
-    return next(HttpErrors(404))
+    return next(HttpError(404))
   }
 
   const waterArr = findWater.waterAmount.find(item => item.date === date)
   if (!waterArr) {
-    return next(HttpErrors(404))
+    return next(HttpError(404))
   }
   res.status(200).json(waterArr)
 })
@@ -120,7 +120,7 @@ export const getWaterByMonth = asyncWrapper(async (req, res, next) => {
   const findWater = await Water.findOne({ owner: ownerId })
 
   if (!findWater) {
-    return next(HttpErrors(404))
+    return next(HttpError(404))
   }
 
   const waterArr = findWater.waterAmount.filter(item => {
@@ -129,7 +129,7 @@ export const getWaterByMonth = asyncWrapper(async (req, res, next) => {
   })
 
   if (!waterArr) {
-    return next(HttpErrors(404))
+    return next(HttpError(404))
   }
 
   res.status(200).json(waterArr)

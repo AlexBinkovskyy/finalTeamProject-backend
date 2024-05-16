@@ -480,6 +480,100 @@
             }
           }
         }
+      },
+      "patch": {
+        "summary": "End-poin wich resolves password recovery procedure",
+        "tags": ["Users"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "resetToken": {
+                    "type": "string",
+                    "description": "reset token",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...."
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "qwqerty1234"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Message indicating the action performed",
+                      "example": "Password changed successfuly"
+                    },
+                    "user": {
+                      "type": "object",
+                      "properties": {
+                        "_id": {
+                          "type": "string",
+                          "description": "Unique users identifier",
+                          "example": "6640d475a1f0ed15ds777553"
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "example@test.net"
+                        },
+                        "isVerified": {
+                          "type": "Boolian",
+                          "example": true
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Rejected opration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Not authorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "User not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
 

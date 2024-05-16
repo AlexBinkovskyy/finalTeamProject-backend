@@ -1,5 +1,5 @@
 import multer from "multer";
-import HttpErrors from "../helpers/HttpError.js";
+import HttpError from "../helpers/HttpError.js";
 import { v2 as cloudinary } from "cloudinary";
 import path from "path";
 import fs from "fs/promises";
@@ -16,7 +16,7 @@ const filter = (req, file, cb) => {
   if (file.mimetype.startsWith("image/")) {
     cb(null, true);
   } else {
-    cb(HttpErrors(400, "Uploaded data must be an image"), false);
+    cb(HttpError(400, "Uploaded data must be an image"), false);
   }
 };
 

@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken";
 // import { passRecoveryHtmlTemplate } from "../helpers/statickHtml/passRecovetyHtmlTemplate.js";
 import { htmlTemplate } from "../helpers/statickHtml/htmlTemplate.js";
 import { passRecoveryHtmlTemplate } from "../helpers/statickHtml/passRecoveryHtmlTemplate.js";
+import { nextTick } from "process";
 
 export const checkUserByEmail = async ({ email }) =>
   await User.findOne({ email });
@@ -30,7 +31,7 @@ const updateUserWithToken = async (newUser, id) =>
 
 const createResetPasswordToken = (user) => {
   const resetToken = jwt.sign({ id: user.id }, process.env.SECRET_KEY, {
-    expiresIn: "5min",
+    expiresIn: "5m",
   });
   user.resetToken = resetToken;
   return user;
@@ -47,6 +48,19 @@ export const checkTokenPlusUser = async (id, token) => {
   const user = await User.findById(id, { password: 0, verificationToken: 0 });
   if (!user.isVerified) return false;
   const comparetokens = user.token === token ? true : false;
+  return comparetokens ? user : false;
+};
+
+export const checkResetTokenPlusUser = async (id, token) => {
+  const user = await User.findById(id, {
+    resetToken: 1,
+    _id: 1,
+    token: 1,
+    isVerified: 1,
+    email: 1
+  });
+  if (!user.isVerified) return false;
+  const comparetokens = user.resetToken === token ? true : false;
   return comparetokens ? user : false;
 };
 
@@ -114,8 +128,7 @@ export const recoveryEmailService = async (user) => {
     to: result.email,
     subject: "Password recovery code",
     text: "Password recovery code",
-    html: passRecoveryHtmlTemplate(
-      result.resetToken),
+    html: passRecoveryHtmlTemplate(result.resetToken),
   };
   await transporter
     .sendMail(emailOptions)
@@ -160,4 +173,14 @@ export const updateUser = async (user) => {
     new: true,
   }).select("-verificationToken -password");
   return result;
+};
+
+export const changeUserPassword = async (user, password) => {
+     user.password = await bcrypt.hash(password, 10);
+    user.resetToken = null;
+    user.token = null;
+    user = await updateUser(user);
+    console.log(user);
+    return user;
+  
 };

@@ -2,7 +2,9 @@ import HttpError from "../helpers/HttpError.js";
 import { uploadImage } from "../midleWares/fileHandler.js";
 import { User } from "../models/userModel.js";
 import {
+  changeUserPassword,
   changeVerificationCreds,
+  checkResetTokenPlusUser,
   checkUserByEmail,
   checkUserCreds,
   createUser,
@@ -12,6 +14,7 @@ import {
   recoveryEmailService,
   updateUser,
 } from "../services/userService.js";
+import jwt from "jsonwebtoken";
 
 export const createNewUser = async (req, res, next) => {
   if (await checkUserByEmail(req.body))
@@ -112,13 +115,34 @@ export const emailPassRecoveryController = async (req, res, nex) => {
 };
 
 export const recoveryPasswordController = async (req, res, next) => {
+  const { resetToken, password } = req.body;
+  try {
+    const { id } = jwt.verify(resetToken, process.env.SECRET_KEY);
+    const user = await checkResetTokenPlusUser(id, resetToken);
+    if (!user) throw HttpError(401, "Not authorized");
+
+   const updatedUser = await changeUserPassword(user, password)
+   res.status(201).json({
+    message: "Password changed successfuly",
+    user: {
+      _id: updatedUser._id,
+      email: updatedUser.email,
+      isVerified: updatedUser.isVerified
+    }
+   })
+  } catch (error) {
+    next(error);
+  }
+
+
   
-}
+ 
+};
 
 export const getAllUsers = async (req, res, next) => {
-  const allUsers = await User.find().select({avatarUrl: 1, _id: 0})
+  const allUsers = await User.find().select({ avatarUrl: 1, _id: 0 });
   res.json({
     userCount: allUsers.length,
-    userAvatars: allUsers
-  })
-}
+    userAvatars: allUsers,
+  });
+};

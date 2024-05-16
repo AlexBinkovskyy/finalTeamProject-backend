@@ -6,10 +6,10 @@ const defaultMessages = {
   409: "Conflist",
 };
 
-const HttpErrors = (status, message = defaultMessages[status]) => {
+const HttpError = (status, message = defaultMessages[status]) => {
   const error = new Error(message);
   error.status = status;
   return error;
 };
 
-export default HttpErrors;
+export default HttpError;
