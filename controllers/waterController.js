@@ -32,11 +32,13 @@ export const addWater = asyncWrapper(async (req, res, next) => {
     time,
   })
 
+  addWaterStatsToObj(waterAmountItem)
+
   if (isNewDate) {
     waterNote.waterAmount.push(waterAmountItem)
   }
 
-  waterNote = await Water.create(waterNote)
+  await Water.create(waterNote)
 
   res.status(201).json(waterAmountItem)
 })
@@ -63,6 +65,8 @@ export const updateWater = asyncWrapper(async (req, res, next) => {
         delete mergedData._id
         Object.assign(dailyCountItem, mergedData)
 
+        addWaterStatsToObj(waterAmountItem)
+
         await findWater.save()
         res.status(200).json(waterAmountItem)
       }
@@ -88,6 +92,8 @@ export const deleteWater = asyncWrapper(async (req, res, next) => {
 
     if (dailyCountIndex !== -1) {
       waterAmountItem.dailyCount.splice(dailyCountIndex, 1)
+
+      addWaterStatsToObj(waterAmountItem)
 
       await findWater.save()
       res.status(200).json(waterAmountItem)
@@ -134,3 +140,21 @@ export const getWaterByMonth = asyncWrapper(async (req, res, next) => {
 
   res.status(200).json(waterArr)
 })
+
+function addWaterStatsToObj(waterAmountItem) {
+  waterAmountItem.totalWater = calculateDailyTotalAmount(
+    waterAmountItem.dailyCount
+  )
+  waterAmountItem.waterRecordsAmount = getDailyCountLength(
+    waterAmountItem.dailyCount
+  )
+}
+
+function calculateDailyTotalAmount(dailyCount) {
+  return dailyCount.reduce((total, el) => {
+    return total + el.amount
+  }, 0)
+}
+function getDailyCountLength(dailyCount) {
+  return dailyCount.length
+}
