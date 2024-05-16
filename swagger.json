@@ -306,6 +306,7 @@
         }
       }
     },
+
     "/users/current": {
       "get": {
         "tags": ["Users"],
@@ -383,6 +384,7 @@
         }
       }
     },
+
     "/users/getusers": {
       "get": {
         "summary": "Returns totall ammount of users stored in DB and array of user's avatars",
@@ -411,6 +413,66 @@
                           }
                         }
                       }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/users/passrecovery": {
+      "post": {
+        "summary": "End-poin wich starts password recovery procedure",
+        "tags": ["Users"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "description": "User's email",
+                    "format": "email",
+                    "example": "example@test.net"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Message indicating the action performed",
+                      "example": "Recovery instructions was sent to provided email"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "User not found"
                     }
                   }
                 }
