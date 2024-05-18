@@ -30,7 +30,8 @@ export const uploadImage = multer({
 
 export const processImage = async (req, res, next) => {
   if (req.file === undefined)return next();
-  req.file.filename = `userID_${req.user._id}_${req.file.fieldname}`;
+  req.file.filename = `userID_${req.user._id}_${req.file.fieldname}${new Date().getTime()}`;
+  console.log(req.file.filename);
   next();
 };
 
