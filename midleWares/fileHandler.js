@@ -50,8 +50,8 @@ export const makeImagePublic = async (req, res, next) => {
         quality: "auto",
         crop: "fill",
         gravity: "faces:auto",
-        // width: 100,
-        // height: 100,
+        width: 500,
+        height: 500,
         radius: "max",
         effect: "sharpen:100",
       })
