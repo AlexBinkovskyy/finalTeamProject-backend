@@ -180,7 +180,6 @@ export const changeUserPassword = async (user, password) => {
     user.resetToken = null;
     user.token = null;
     user = await updateUser(user);
-    console.log(user);
     return user;
   
 };

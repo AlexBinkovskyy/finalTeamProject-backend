@@ -31,11 +31,13 @@ export const uploadImage = multer({
 export const processImage = async (req, res, next) => {
   if (req.file === undefined)return next();
   req.file.filename = `userID_${req.user._id}_${req.file.fieldname}${new Date().getTime()}`;
-  console.log(req.file.filename);
   next();
 };
 
 export const makeImagePublic = async (req, res, next) => {
+  const url = req.user.avatarUrl
+  const publicId = url.slice(url.indexOf('userID_')).split("?")[0]
+  
   if (req.file === undefined)return next();
   cloudinary.config({
     cloud_name: process.env.CLOUDINARY_NAME,
@@ -43,6 +45,8 @@ export const makeImagePublic = async (req, res, next) => {
     api_secret: process.env.CLOUDINARY_API_SECRET,
   });
 
+  cloudinary.uploader.destroy(publicId)
+  
   req.user.avatarUrl = await cloudinary.uploader
     .upload(req.file.path, { public_id: req.file.filename })
     .then((res) =>
@@ -51,10 +55,10 @@ export const makeImagePublic = async (req, res, next) => {
         quality: "auto",
         crop: "fill",
         gravity: "faces:auto",
-        width: 500,
-        height: 500,
+        width: 200,
+        height: 200,
         radius: "max",
-        effect: "sharpen:100",
+        effect: "sharpen:150",
       })
     )
     .catch((error) => {
