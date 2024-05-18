@@ -86,30 +86,21 @@ export const upload = async (req, res, next) => {
 export const chahgeUserCreds = async (req, res, next) => {
   const updatedUser = { ...req.user._doc, ...req.body };
   req.user = await updateUser(updatedUser);
-  res
-    .set(
-      "Cache-Control",
-      "no-store, no-cache, must-revalidate, proxy-revalidate"
-    )
-    .set("Pragma", "no-cache")
-    .set("Expires", "0")
-    .set("Surrogate-Control", "no-store")
-    .status(201)
-    .json({
-      token: req.user.token,
-      user: {
-        _id: req.user._id,
-        name: req.user.name,
-        email: req.user.email,
-        gender: req.user.gender,
-        dailyNorma: req.user.dailyNorma,
-        weight: req.user.weight,
-        activeTime: req.user.activeTime,
-        goal: req.user.goal,
-        avatarUrl: req.user.avatarUrl,
-        isVerified: req.user.isVerified,
-      },
-    });
+  res.status(201).json({
+    token: req.user.token,
+    user: {
+      _id: req.user._id,
+      name: req.user.name,
+      email: req.user.email,
+      gender: req.user.gender,
+      dailyNorma: req.user.dailyNorma,
+      weight: req.user.weight,
+      activeTime: req.user.activeTime,
+      goal: req.user.goal,
+      avatarUrl: req.user.avatarUrl,
+      isVerified: req.user.isVerified,
+    },
+  });
 };
 
 export const emailPassRecoveryController = async (req, res, nex) => {
