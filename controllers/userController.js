@@ -97,7 +97,7 @@ export const chahgeUserCreds = async (req, res, next) => {
       weight: req.user.weight,
       activeTime: req.user.activeTime,
       goal: req.user.goal,
-      avatarUrl: req.user.avatarUrl,
+      avatarUrl: `${req.user.avatarUrl}?${new Date().getTime()}`,
       isVerified: req.user.isVerified,
     },
   });
