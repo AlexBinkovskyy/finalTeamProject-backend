@@ -87,6 +87,13 @@ export const chahgeUserCreds = async (req, res, next) => {
   const updatedUser = { ...req.user._doc, ...req.body };
   req.user = await updateUser(updatedUser);
   res
+    .set(
+      "Cache-Control",
+      "no-store, no-cache, must-revalidate, proxy-revalidate"
+    )
+    .set("Pragma", "no-cache")
+    .set("Expires", "0")
+    .set("Surrogate-Control", "no-store")
     .status(201)
     .json({
       token: req.user.token,
@@ -102,14 +109,7 @@ export const chahgeUserCreds = async (req, res, next) => {
         avatarUrl: req.user.avatarUrl,
         isVerified: req.user.isVerified,
       },
-    })
-    .set(
-      "Cache-Control",
-      "no-store, no-cache, must-revalidate, proxy-revalidate"
-    )
-    .set("Pragma", "no-cache")
-    .set("Expires", "0")
-    .set("Surrogate-Control", "no-store");
+    });
 };
 
 export const emailPassRecoveryController = async (req, res, nex) => {
