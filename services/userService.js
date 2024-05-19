@@ -6,15 +6,6 @@ import jwt from "jsonwebtoken";
 import { htmlTemplate } from "../helpers/statickHtml/htmlTemplate.js";
 import { passRecoveryHtmlTemplate } from "../helpers/statickHtml/passRecoveryHtmlTemplate.js";
 
-const {
-  ACCESS_SECRET_KEY,
-  REFRESH_SECRET_KEY,
-  POST_SERVICE_HOST,
-  POST_SERVICE_PORT,
-  POST_SERVICE_USER,
-  POST_SERVICE_PASSWORD,
-} = process.env;
-
 export const checkUserByEmail = async ({ email }) =>
   await User.findOne({ email });
 
@@ -33,17 +24,17 @@ export const createUser = async (userData) => {
 };
 
 const updateUserWithToken = async (newUser, id) =>
-  (newUser.token = jwt.sign({ id }, ACCESS_SECRET_KEY, {
+  (newUser.token = jwt.sign({ id }, process.env.ACCESS_SECRET_KEY, {
     expiresIn: "5m",
   }));
 
 const updateUserWithRefreshToken = async (newUser, id) =>
-  (newUser.refreshToken = jwt.sign({ id }, REFRESH_SECRET_KEY, {
+  (newUser.refreshToken = jwt.sign({ id }, process.env.REFRESH_SECRET_KEY, {
     expiresIn: "7d",
   }));
 
 const createResetPasswordToken = (user) => {
-  const resetToken = jwt.sign({ id: user.id }, ACCESS_SECRET_KEY, {
+  const resetToken = jwt.sign({ id: user.id }, process.env.ACCESS_SECRET_KEY, {
     expiresIn: "5m",
   });
   user.resetToken = resetToken;
@@ -93,12 +84,12 @@ export const deleteTokenFromUser = async (userData) => {
 
 export const emailService = async (user) => {
   const emailConfig = {
-    host: POST_SERVICE_HOST,
-    port: POST_SERVICE_PORT,
+    host: process.env.POST_SERVICE_HOST,
+    port: process.env.POST_SERVICE_PORT,
     secure: true,
     auth: {
-      user: POST_SERVICE_USER,
-      pass: POST_SERVICE_PASSWORD,
+      user: process.env.POST_SERVICE_USER,
+      pass: process.env.POST_SERVICE_PASSWORD,
     },
   };
 
@@ -106,7 +97,7 @@ export const emailService = async (user) => {
 
   const transporter = nodemailer.createTransport(emailConfig);
   const emailOptions = {
-    from: POST_SERVICE_USER,
+    from: process.env.POST_SERVICE_USER,
     to: email,
     subject: "EMAIL VERIFICATION CODE",
     text: "verivication link",
