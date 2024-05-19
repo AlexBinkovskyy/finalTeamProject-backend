@@ -136,7 +136,10 @@ export const recoveryPasswordController = async (req, res, next) => {
 };
 
 export const getAllUsers = async (req, res, next) => {
-  const allUsers = await User.find().select({ avatarUrl: 1, _id: 0 });
+  const allUsers = await User.aggregate([
+    { $match: { avatarUrl: { $ne: "https://finalteamproject-backend.onrender.com/icon/defaultAvatar.png" } } }, 
+    { $sample: { size: 3 } },
+    { $project: { avatarUrl: 1, _id: 0 } }]);
   res.json({
     userCount: allUsers.length,
     userAvatars: allUsers,
