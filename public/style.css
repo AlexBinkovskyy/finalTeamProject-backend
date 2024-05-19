@@ -4,7 +4,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 60vh;
-    background-color: rgb(14, 66, 44);
+    background-color: rgb(191, 234, 215);
   }
 
 .wrapper {
@@ -24,5 +24,5 @@ h1{
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     font-weight: 300;
     font-size: 38px;
-    color: #84ebb7;
+    color: #11492d;
 }
