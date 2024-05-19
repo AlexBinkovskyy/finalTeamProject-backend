@@ -23,6 +23,7 @@ const userSchema = new Schema(
         "https://finalteamproject-backend.onrender.com/icon/defaultAvatar.png",
     },
     token: String,
+    refreshToken: String,
     isVerified: { type: Boolean, default: false },
     verificationToken: {
       type: String,

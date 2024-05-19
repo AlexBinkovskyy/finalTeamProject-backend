@@ -3,7 +3,7 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
-const JWT_SECRET = process.env.SECRET_KEY
+const JWT_SECRET = process.env.ACCESS_SECRET_KEY
 const JWT_EXPIRES_IN = '24h'
 
 export const signToken = id => {

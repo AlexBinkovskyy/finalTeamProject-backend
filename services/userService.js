@@ -3,10 +3,17 @@ import nodemailer from "nodemailer";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
-// import { passRecoveryHtmlTemplate } from "../helpers/statickHtml/passRecovetyHtmlTemplate.js";
 import { htmlTemplate } from "../helpers/statickHtml/htmlTemplate.js";
 import { passRecoveryHtmlTemplate } from "../helpers/statickHtml/passRecoveryHtmlTemplate.js";
-import { nextTick } from "process";
+
+const {
+  ACCESS_SECRET_KEY,
+  REFRESH_SECRET_KEY,
+  POST_SERVICE_HOST,
+  POST_SERVICE_PORT,
+  POST_SERVICE_USER,
+  POST_SERVICE_PASSWORD,
+} = process.env;
 
 export const checkUserByEmail = async ({ email }) =>
   await User.findOne({ email });
@@ -19,18 +26,24 @@ export const createUser = async (userData) => {
     .digest("hex");
   const newUser = new User(userData);
   await updateUserWithToken(newUser, newUser._id);
+  await updateUserWithRefreshToken(newUser, newUser._id);
   await newUser.save();
   newUser.password = undefined;
   return newUser;
 };
 
 const updateUserWithToken = async (newUser, id) =>
-  (newUser.token = jwt.sign({ id }, process.env.SECRET_KEY, {
-    expiresIn: "24h",
+  (newUser.token = jwt.sign({ id }, ACCESS_SECRET_KEY, {
+    expiresIn: "5m",
+  }));
+
+const updateUserWithRefreshToken = async (newUser, id) =>
+  (newUser.refreshToken = jwt.sign({ id }, REFRESH_SECRET_KEY, {
+    expiresIn: "7d",
   }));
 
 const createResetPasswordToken = (user) => {
-  const resetToken = jwt.sign({ id: user.id }, process.env.SECRET_KEY, {
+  const resetToken = jwt.sign({ id: user.id }, ACCESS_SECRET_KEY, {
     expiresIn: "5m",
   });
   user.resetToken = resetToken;
@@ -57,7 +70,7 @@ export const checkResetTokenPlusUser = async (id, token) => {
     _id: 1,
     token: 1,
     isVerified: 1,
-    email: 1
+    email: 1,
   });
   if (!user.isVerified) return false;
   const comparetokens = user.resetToken === token ? true : false;
@@ -80,12 +93,12 @@ export const deleteTokenFromUser = async (userData) => {
 
 export const emailService = async (user) => {
   const emailConfig = {
-    host: process.env.POST_SERVICE_HOST,
-    port: process.env.POST_SERVICE_PORT,
+    host: POST_SERVICE_HOST,
+    port: POST_SERVICE_PORT,
     secure: true,
     auth: {
-      user: process.env.POST_SERVICE_USER,
-      pass: process.env.POST_SERVICE_PASSWORD,
+      user: POST_SERVICE_USER,
+      pass: POST_SERVICE_PASSWORD,
     },
   };
 
@@ -93,7 +106,7 @@ export const emailService = async (user) => {
 
   const transporter = nodemailer.createTransport(emailConfig);
   const emailOptions = {
-    from: process.env.POST_SERVICE_USER,
+    from: POST_SERVICE_USER,
     to: email,
     subject: "EMAIL VERIFICATION CODE",
     text: "verivication link",
@@ -145,14 +158,18 @@ export const checkUserCreds = async (creds) => {
 
 export const login = async (user) => {
   const { _id } = user;
-  const userToken = await updateUserWithToken(user, _id);
+  const accessToken = await updateUserWithToken(user, _id);
+  const refreshToken = await updateUserWithRefreshToken(user, _id);
   const loggedUser = await User.findByIdAndUpdate(
     _id,
-    { token: userToken },
+    { token: accessToken,
+      refreshToken: refreshToken
+     },
     { new: true }
   ).select("-password -verificationToken");
   return {
-    token: loggedUser.token,
+    accessToken: loggedUser.token,
+    refreshToken: loggedUser.refreshToken,
     user: {
       _id: loggedUser._id,
       name: loggedUser.name,
@@ -176,10 +193,9 @@ export const updateUser = async (user) => {
 };
 
 export const changeUserPassword = async (user, password) => {
-     user.password = await bcrypt.hash(password, 10);
-    user.resetToken = null;
-    user.token = null;
-    user = await updateUser(user);
-    return user;
-  
+  user.password = await bcrypt.hash(password, 10);
+  user.resetToken = null;
+  user.token = null;
+  user = await updateUser(user);
+  return user;
 };

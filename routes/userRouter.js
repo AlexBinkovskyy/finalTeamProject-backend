@@ -83,7 +83,7 @@ userRouter.patch(
   asyncWrapper(recoveryPasswordController)
 );
 
-userRouter.get("/refreshtoken");
+userRouter.get("/refresh");
 
 userRouter.get("/getusers", getAllUsers);
 
