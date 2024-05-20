@@ -6,7 +6,6 @@ import jwt from "jsonwebtoken";
 // import { passRecoveryHtmlTemplate } from "../helpers/statickHtml/passRecovetyHtmlTemplate.js";
 import { htmlTemplate } from "../helpers/statickHtml/htmlTemplate.js";
 import { passRecoveryHtmlTemplate } from "../helpers/statickHtml/passRecoveryHtmlTemplate.js";
-import { nextTick } from "process";
 
 export const checkUserByEmail = async ({ email }) =>
   await User.findOne({ email });
@@ -25,8 +24,13 @@ export const createUser = async (userData) => {
 };
 
 const updateUserWithToken = async (newUser, id) =>
-  (newUser.token = jwt.sign({ id }, process.env.SECRET_KEY, {
-    expiresIn: "24h",
+  (newUser.token = jwt.sign({ id }, process.env.ACCESS_SECRET_KEY, {
+    expiresIn: "5m",
+  }));
+
+const updateUserWithRefreshToken = async (newUser, id) =>
+  (newUser.token = jwt.sign({ id }, process.env.REFRESH_SECRET_KEY, {
+    expiresIn: "7d",
   }));
 
 const createResetPasswordToken = (user) => {
@@ -145,14 +149,18 @@ export const checkUserCreds = async (creds) => {
 
 export const login = async (user) => {
   const { _id } = user;
-  const userToken = await updateUserWithToken(user, _id);
+  const accessToken = await updateUserWithToken(user, _id);
+  const refreshToken = await updateUserWithRefreshToken(user, _id)
   const loggedUser = await User.findByIdAndUpdate(
     _id,
-    { token: userToken },
+    { accessToken, refreshToken },
     { new: true }
   ).select("-password -verificationToken");
+console.log(loggedUser.accessToken);
+console.log(loggedUser);
   return {
-    token: loggedUser.token,
+    accessToken: loggedUser.accessToken,
+    refreshToken: loggedUser.refreshToken,
     user: {
       _id: loggedUser._id,
       name: loggedUser.name,

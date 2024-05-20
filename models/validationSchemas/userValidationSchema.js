@@ -51,3 +51,4 @@ export const passrecoverySchema = Joi.object({
     "any.required": "Missed required password field",
   }),
 });
+
