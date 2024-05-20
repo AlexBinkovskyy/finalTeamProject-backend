@@ -88,7 +88,8 @@ export const changeVerificationCreds = async (creds) => {
 };
 
 export const deleteTokenFromUser = async (userData) => {
-  userData.token = null;
+  userData.accessToken = null;
+  userData.refreshToken = null
   const user = await User.findByIdAndUpdate(userData.id, userData, {
     new: true,
   });
