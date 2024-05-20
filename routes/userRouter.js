@@ -4,7 +4,6 @@ import {
   changeUserCredsSchema,
   emailSendPassRecoverySchema,
   passrecoverySchema,
-  refreshTokenSchema,
   registerLoginUserSchema,
   resendEmailSchema,
 } from "../models/validationSchemas/userValidationSchema.js";
@@ -16,15 +15,14 @@ import {
   getCurrentUserCreds,
   loginUser,
   recoveryPasswordController,
-  refreshPairToken,
   sendVerificationEmail,
+  upload,
   verificationTokenCheck,
 } from "../controllers/userController.js";
 import { asyncWrapper } from "../midleWares/asyncWrapper.js";
 import {
   checkAuthenticity,
   checkAuthenticityAndLogout,
-  checkRefreshAuthenticity,
 } from "../midleWares/checkAuthenticity.js";
 import {
   makeImagePublic,
@@ -85,12 +83,7 @@ userRouter.patch(
   asyncWrapper(recoveryPasswordController)
 );
 
-userRouter.post(
-  "/refresh",
-  validateBody(refreshTokenSchema),
-  asyncWrapper(checkRefreshAuthenticity),
-  asyncWrapper(refreshPairToken)
-);
+userRouter.get("/refreshtoken");
 
 userRouter.get("/getusers", getAllUsers);
 

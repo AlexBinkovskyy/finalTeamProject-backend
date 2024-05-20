@@ -6,8 +6,6 @@ import swaggerUi from 'swagger-ui-express'
 import swaggerDocument from "./swagger.json" assert { type: "json" };
 import userRouter from "./routes/userRouter.js";
 import waterRouter from "./routes/waterRouter.js";
-import cookieParser from "cookie-parser";
-
 
 
 dotenv.config();
@@ -32,7 +30,6 @@ mongoose
 app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
-app.use(cookieParser())
 
 app.use("/api/users", userRouter);
 app.use("/api/water", waterRouter);
