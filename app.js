@@ -29,7 +29,7 @@ mongoose
   });
 
 app.use(cors({
-  origin: 'https://finalteamproject-backend.onrender.com',
+  origin: 'https://alexbinkovskyy.github.io/finalTeamProject',
   credentials: true
 }));
 app.use(express.json());
