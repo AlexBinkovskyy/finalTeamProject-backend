@@ -51,7 +51,7 @@ export const findVerifiedToken = async (verificationToken) => {
 export const checkTokenPlusUser = async (id, token) => {
   const user = await User.findById(id, { password: 0, verificationToken: 0 });
   if (!user.isVerified) return false;
-  const comparetokens = user.token === token ? true : false;
+  const comparetokens = user.accessToken === token ? true : false;
   return comparetokens ? user : false;
 };
 
