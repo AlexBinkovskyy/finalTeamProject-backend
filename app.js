@@ -28,10 +28,12 @@ mongoose
     process.exit(1);
   });
 
-app.use(cors({
-  origin: 'https://alexbinkovskyy.github.io/finalTeamProject',
-  credentials: true
-}));
+app.use(cors(
+//   {
+//   origin: 'https://alexbinkovskyy.github.io/finalTeamProject',
+//   credentials: true
+// }
+));
 app.use(express.json());
 app.use(cookieParser())
 app.use(express.static("public"));
