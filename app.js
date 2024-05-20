@@ -29,10 +29,10 @@ mongoose
   });
 
 app.use(cors(
-//   {
+  {
 //   origin: 'https://alexbinkovskyy.github.io/finalTeamProject',
-//   credentials: true
-// }
+  credentials: true
+}
 ));
 app.use(express.json());
 app.use(cookieParser())
