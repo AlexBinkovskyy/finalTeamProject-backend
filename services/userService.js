@@ -3,7 +3,6 @@ import nodemailer from "nodemailer";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
-// import { passRecoveryHtmlTemplate } from "../helpers/statickHtml/passRecovetyHtmlTemplate.js";
 import { htmlTemplate } from "../helpers/statickHtml/htmlTemplate.js";
 import { passRecoveryHtmlTemplate } from "../helpers/statickHtml/passRecoveryHtmlTemplate.js";
 
@@ -18,23 +17,24 @@ export const createUser = async (userData) => {
     .digest("hex");
   const newUser = new User(userData);
   await updateUserWithToken(newUser, newUser._id);
+  await updateUserWithRefreshToken(newUser, newUser._id);
   await newUser.save();
   newUser.password = undefined;
   return newUser;
 };
 
-const updateUserWithToken = async (newUser, id) =>
-  (newUser.token = jwt.sign({ id }, process.env.ACCESS_SECRET_KEY, {
+export const updateUserWithToken = async (newUser, id) =>
+  (newUser.accessToken = jwt.sign({ id }, process.env.ACCESS_SECRET_KEY, {
     expiresIn: "5m",
   }));
 
-const updateUserWithRefreshToken = async (newUser, id) =>
-  (newUser.token = jwt.sign({ id }, process.env.REFRESH_SECRET_KEY, {
+export const updateUserWithRefreshToken = async (newUser, id) =>
+  (newUser.refreshToken = jwt.sign({ id }, process.env.REFRESH_SECRET_KEY, {
     expiresIn: "7d",
   }));
 
 const createResetPasswordToken = (user) => {
-  const resetToken = jwt.sign({ id: user.id }, process.env.SECRET_KEY, {
+  const resetToken = jwt.sign({ id: user.id }, process.env.ACCESS_SECRET_KEY, {
     expiresIn: "5m",
   });
   user.resetToken = resetToken;
@@ -68,14 +68,28 @@ export const checkResetTokenPlusUser = async (id, token) => {
   return comparetokens ? user : false;
 };
 
+export const checkRefreshTokenPlusUser = async (id, oldRefreshToken) => {
+  const user = await User.findById(id, {
+    _id: 1,
+    accessToken: 1,
+    refreshToken: 1,
+    isVerified: 1,
+    email: 1,
+  });
+  if (!user.isVerified) return false;
+  const comparetokens = user.refreshToken === oldRefreshToken ? true : false;
+  return comparetokens ? user : false;
+};
+
 export const changeVerificationCreds = async (creds) => {
-  creds.verificationToken = "";
+  creds.verificationToken = null;
   creds.isVerified = true;
   return await User.findByIdAndUpdate(creds._id, creds, { new: true });
 };
 
 export const deleteTokenFromUser = async (userData) => {
-  userData.token = null;
+  userData.accessToken = null;
+  userData.refreshToken = null;
   const user = await User.findByIdAndUpdate(userData.id, userData, {
     new: true,
   });
@@ -156,8 +170,6 @@ export const login = async (user) => {
     { accessToken, refreshToken },
     { new: true }
   ).select("-password -verificationToken");
-console.log(loggedUser.accessToken);
-console.log(loggedUser);
   return {
     accessToken: loggedUser.accessToken,
     refreshToken: loggedUser.refreshToken,
