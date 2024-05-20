@@ -59,8 +59,15 @@ export const loginUser = async (req, res, next) => {
   const user = await checkUserCreds(req.body);
   if (!user) throw HttpError(401, "Email or password is wrong or not verified");
   const loggedUser = await login(user);
-  res.cookie("refreshToken", loggedUser.refreshToken, {maxAge: (7*24*60*60*1000), httpOnly: true, path: '/refreshtoken'})
-  res.status(200).json(loggedUser);
+
+  res.cookie("refreshToken", loggedUser.refreshToken, {
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    path: "/",
+    // sameSite: 'None',
+    // httpOnly: true,
+    // secure: true,
+  });
+  res.json(loggedUser);
 };
 
 export const getCurrentUserCreds = async (req, res, next) => {
@@ -140,9 +147,16 @@ export const recoveryPasswordController = async (req, res, next) => {
 
 export const getAllUsers = async (req, res, next) => {
   const allUsers = await User.aggregate([
-    { $match: { avatarUrl: { $ne: "https://finalteamproject-backend.onrender.com/icon/defaultAvatar.png" } } }, 
+    {
+      $match: {
+        avatarUrl: {
+          $ne: "https://finalteamproject-backend.onrender.com/icon/defaultAvatar.png",
+        },
+      },
+    },
     { $sample: { size: 3 } },
-    { $project: { avatarUrl: 1, _id: 0 } }]);
+    { $project: { avatarUrl: 1, _id: 0 } },
+  ]);
   res.json({
     userCount: allUsers.length,
     userAvatars: allUsers,
@@ -155,7 +169,7 @@ export const refreshPairToken = async (req, res, next) => {
     req.user,
     req.user._id
   );
-
+  
   const updatedUser = await User.findByIdAndUpdate(req.user._id, req.user, {
     new: true,
     fields: {
@@ -163,6 +177,13 @@ export const refreshPairToken = async (req, res, next) => {
       refreshToken: 1,
       isVerified: 1,
     },
+  });
+  res.cookie("refreshToken", updatedUser.refreshToken, {
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    path: "/",
+    // sameSite: 'None',
+    // httpOnly: true,
+    // secure: false,
   });
   res.json(updatedUser);
 };

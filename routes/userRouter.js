@@ -87,7 +87,7 @@ userRouter.patch(
 
 userRouter.post(
   "/refreshtoken",
-  // validateBody(refreshTokenSchema),
+  validateBody(refreshTokenSchema),
   asyncWrapper(checkRefreshAuthenticity),
   asyncWrapper(refreshPairToken)
 );

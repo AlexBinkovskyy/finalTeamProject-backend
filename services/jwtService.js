@@ -8,7 +8,6 @@ const JWT_EXPIRES_IN = '24h'
 
 export const signToken = id => {
   const token = jwt.sign({ id }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN })
-  console.log(token)
   return token
 }
 
