@@ -34,7 +34,9 @@ export const checkAuthenticityAndLogout = async (req, res, next) => {
 };
 
 export const checkRefreshAuthenticity = async (req, res, next) => {
-  const {refreshToken: oldRefreshToken} = req.body
+  console.log(req);
+  const {refreshToken: oldRefreshToken} = req.cookies
+  // req.cookies.refreshToken
   try {
     const { id } = jwt.verify(oldRefreshToken, process.env.REFRESH_SECRET_KEY);
     const user = await checkRefreshTokenPlusUser(id, oldRefreshToken);
