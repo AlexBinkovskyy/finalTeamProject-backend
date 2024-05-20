@@ -3,8 +3,10 @@ import nodemailer from "nodemailer";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
+// import { passRecoveryHtmlTemplate } from "../helpers/statickHtml/passRecovetyHtmlTemplate.js";
 import { htmlTemplate } from "../helpers/statickHtml/htmlTemplate.js";
 import { passRecoveryHtmlTemplate } from "../helpers/statickHtml/passRecoveryHtmlTemplate.js";
+import { nextTick } from "process";
 
 export const checkUserByEmail = async ({ email }) =>
   await User.findOne({ email });
@@ -17,24 +19,18 @@ export const createUser = async (userData) => {
     .digest("hex");
   const newUser = new User(userData);
   await updateUserWithToken(newUser, newUser._id);
-  await updateUserWithRefreshToken(newUser, newUser._id);
   await newUser.save();
   newUser.password = undefined;
   return newUser;
 };
 
-export const updateUserWithToken = async (newUser, id) =>
-  newUser.accessToken = jwt.sign({ id }, process.env.ACCESS_SECRET_KEY, {
-    expiresIn: "5min",
-  })
-
-export const updateUserWithRefreshToken = async (newUser, id) =>
-  (newUser.refreshToken = jwt.sign({ id }, process.env.REFRESH_SECRET_KEY, {
-    expiresIn: "7d",
+const updateUserWithToken = async (newUser, id) =>
+  (newUser.token = jwt.sign({ id }, process.env.SECRET_KEY, {
+    expiresIn: "24h",
   }));
 
 const createResetPasswordToken = (user) => {
-  const resetToken = jwt.sign({ id: user.id }, process.env.ACCESS_SECRET_KEY, {
+  const resetToken = jwt.sign({ id: user.id }, process.env.SECRET_KEY, {
     expiresIn: "5m",
   });
   user.resetToken = resetToken;
@@ -61,23 +57,10 @@ export const checkResetTokenPlusUser = async (id, token) => {
     _id: 1,
     token: 1,
     isVerified: 1,
-    email: 1,
+    email: 1
   });
   if (!user.isVerified) return false;
   const comparetokens = user.resetToken === token ? true : false;
-  return comparetokens ? user : false;
-};
-
-export const checkRefreshTokenPlusUser = async (id, oldRefreshToken) => {
-  const user = await User.findById(id, {
-    _id: 1,
-    accessToken: 1,
-    refreshToken: 1,
-    isVerified: 1,
-    email: 1,
-  });
-  if (!user.isVerified) return false;
-  const comparetokens = user.refreshToken === oldRefreshToken ? true : false;
   return comparetokens ? user : false;
 };
 
@@ -88,8 +71,7 @@ export const changeVerificationCreds = async (creds) => {
 };
 
 export const deleteTokenFromUser = async (userData) => {
-  userData.accessToken = null;
-  userData.refreshToken = null
+  userData.token = null;
   const user = await User.findByIdAndUpdate(userData.id, userData, {
     new: true,
   });
@@ -163,18 +145,14 @@ export const checkUserCreds = async (creds) => {
 
 export const login = async (user) => {
   const { _id } = user;
-  const accessToken = await updateUserWithToken(user, _id);
-  const refreshToken = await updateUserWithRefreshToken(user, _id);
+  const userToken = await updateUserWithToken(user, _id);
   const loggedUser = await User.findByIdAndUpdate(
     _id,
-    { accessToken: accessToken,
-      refreshToken: refreshToken
-     },
+    { token: userToken },
     { new: true }
   ).select("-password -verificationToken");
   return {
-    accessToken: loggedUser.accessToken,
-    refreshToken: loggedUser.refreshToken,
+    token: loggedUser.token,
     user: {
       _id: loggedUser._id,
       name: loggedUser.name,
@@ -198,9 +176,10 @@ export const updateUser = async (user) => {
 };
 
 export const changeUserPassword = async (user, password) => {
-  user.password = await bcrypt.hash(password, 10);
-  user.resetToken = null;
-  user.token = null;
-  user = await updateUser(user);
-  return user;
+     user.password = await bcrypt.hash(password, 10);
+    user.resetToken = null;
+    user.token = null;
+    user = await updateUser(user);
+    return user;
+  
 };
