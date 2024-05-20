@@ -23,12 +23,12 @@ export const createUser = async (userData) => {
   return newUser;
 };
 
-const updateUserWithToken = async (newUser, id) =>
-  (newUser.token = jwt.sign({ id }, process.env.ACCESS_SECRET_KEY, {
-    expiresIn: "5m",
-  }));
+export const updateUserWithToken = async (newUser, id) =>
+  newUser.accessToken = jwt.sign({ id }, process.env.ACCESS_SECRET_KEY, {
+    expiresIn: "5min",
+  })
 
-const updateUserWithRefreshToken = async (newUser, id) =>
+export const updateUserWithRefreshToken = async (newUser, id) =>
   (newUser.refreshToken = jwt.sign({ id }, process.env.REFRESH_SECRET_KEY, {
     expiresIn: "7d",
   }));
@@ -65,6 +65,19 @@ export const checkResetTokenPlusUser = async (id, token) => {
   });
   if (!user.isVerified) return false;
   const comparetokens = user.resetToken === token ? true : false;
+  return comparetokens ? user : false;
+};
+
+export const checkRefreshTokenPlusUser = async (id, oldRefreshToken) => {
+  const user = await User.findById(id, {
+    _id: 1,
+    accessToken: 1,
+    refreshToken: 1,
+    isVerified: 1,
+    email: 1,
+  });
+  if (!user.isVerified) return false;
+  const comparetokens = user.refreshToken === oldRefreshToken ? true : false;
   return comparetokens ? user : false;
 };
 
@@ -153,13 +166,13 @@ export const login = async (user) => {
   const refreshToken = await updateUserWithRefreshToken(user, _id);
   const loggedUser = await User.findByIdAndUpdate(
     _id,
-    { token: accessToken,
+    { accessToken: accessToken,
       refreshToken: refreshToken
      },
     { new: true }
   ).select("-password -verificationToken");
   return {
-    accessToken: loggedUser.token,
+    accessToken: loggedUser.accessToken,
     refreshToken: loggedUser.refreshToken,
     user: {
       _id: loggedUser._id,

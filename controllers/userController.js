@@ -13,6 +13,8 @@ import {
   login,
   recoveryEmailService,
   updateUser,
+  updateUserWithRefreshToken,
+  updateUserWithToken,
 } from "../services/userService.js";
 import jwt from "jsonwebtoken";
 
@@ -137,11 +139,36 @@ export const recoveryPasswordController = async (req, res, next) => {
 
 export const getAllUsers = async (req, res, next) => {
   const allUsers = await User.aggregate([
-    { $match: { avatarUrl: { $ne: "https://finalteamproject-backend.onrender.com/icon/defaultAvatar.png" } } }, 
+    {
+      $match: {
+        avatarUrl: {
+          $ne: "https://finalteamproject-backend.onrender.com/icon/defaultAvatar.png",
+        },
+      },
+    },
     { $sample: { size: 3 } },
-    { $project: { avatarUrl: 1, _id: 0 } }]);
+    { $project: { avatarUrl: 1, _id: 0 } },
+  ]);
   res.json({
     userCount: allUsers.length,
     userAvatars: allUsers,
   });
+};
+
+export const refreshPairToken = async (req, res, next) => {
+  req.user.accessToken = await updateUserWithToken(req.user, req.user._id);
+  req.user.refreshToken = await updateUserWithRefreshToken(
+    req.user,
+    req.user._id
+  );
+
+  const updatedUser = await User.findByIdAndUpdate(req.user._id, req.user, {
+    new: true,
+    fields: {
+      accessToken: 1,
+      refreshToken: 1,
+      isVerified: 1,
+    },
+  });
+  res.json(updatedUser);
 };

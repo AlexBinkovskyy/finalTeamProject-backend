@@ -51,3 +51,7 @@ export const passrecoverySchema = Joi.object({
     "any.required": "Missed required password field",
   }),
 });
+
+export const refreshTokenSchema = Joi.object({
+  refreshToken: Joi.string().min(171).max(171).required()
+})
