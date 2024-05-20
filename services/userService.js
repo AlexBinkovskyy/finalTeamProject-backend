@@ -116,7 +116,7 @@ export const emailService = async (user) => {
     subject: "EMAIL VERIFICATION CODE",
     text: "verivication link",
     html: htmlTemplate(
-      `https://finalteamproject-backend.onrender.com/confirm.html?${verificationToken}&${token}`
+      `https://finalteamproject-backend.onrender.com/confirm.html?${verificationToken}&${accessToken}`
       // `http://localhost:10000/confirm.html?${verificationToken}&${token}`
     ),
   };
