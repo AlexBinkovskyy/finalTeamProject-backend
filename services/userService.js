@@ -25,7 +25,7 @@ export const createUser = async (userData) => {
 
 export const updateUserWithToken = async (newUser, id) =>
   (newUser.accessToken = jwt.sign({ id }, process.env.ACCESS_SECRET_KEY, {
-    expiresIn: "20s",
+    expiresIn: "5m",
   }));
 
 export const updateUserWithRefreshToken = async (newUser, id) =>
