@@ -13,6 +13,8 @@ import {
   login,
   recoveryEmailService,
   updateUser,
+  updateUserWithRefreshToken,
+  updateUserWithToken,
 } from "../services/userService.js";
 import jwt from "jsonwebtoken";
 
@@ -57,12 +59,16 @@ export const loginUser = async (req, res, next) => {
   const user = await checkUserCreds(req.body);
   if (!user) throw HttpError(401, "Email or password is wrong or not verified");
   const loggedUser = await login(user);
+  res.cookie("refreshtoken", loggedUser.refreshToken, {
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    httpOnly: true,
+  });
   res.status(200).json(loggedUser);
 };
 
 export const getCurrentUserCreds = async (req, res, next) => {
-  res.status(200).json({
-    token: req.user.token,
+    res.status(200).json({
+    accessToken: req.user.token,
     user: {
       _id: req.user._id,
       name: req.user.name,
@@ -86,7 +92,7 @@ export const chahgeUserCreds = async (req, res, next) => {
   const updatedUser = { ...req.user._doc, ...req.body };
   req.user = await updateUser(updatedUser);
   res.status(201).json({
-    token: req.user.token,
+    accessToken: req.user.token,
     user: {
       _id: req.user._id,
       name: req.user.name,
@@ -117,7 +123,7 @@ export const emailPassRecoveryController = async (req, res, nex) => {
 export const recoveryPasswordController = async (req, res, next) => {
   const { resetToken, password } = req.body;
   try {
-    const { id } = jwt.verify(resetToken, process.env.SECRET_KEY);
+    const { id } = jwt.verify(resetToken, process.env.ACCESS_SECRET_KEY);
     const user = await checkResetTokenPlusUser(id, resetToken);
     if (!user) throw HttpError(401, "Not authorized");
 
@@ -137,11 +143,40 @@ export const recoveryPasswordController = async (req, res, next) => {
 
 export const getAllUsers = async (req, res, next) => {
   const allUsers = await User.aggregate([
-    { $match: { avatarUrl: { $ne: "https://finalteamproject-backend.onrender.com/icon/defaultAvatar.png" } } }, 
+    {
+      $match: {
+        avatarUrl: {
+          $ne: "https://finalteamproject-backend.onrender.com/icon/defaultAvatar.png",
+        },
+      },
+    },
     { $sample: { size: 3 } },
-    { $project: { avatarUrl: 1, _id: 0 } }]);
+    { $project: { avatarUrl: 1, _id: 0 } },
+  ]);
   res.json({
     userCount: allUsers.length,
     userAvatars: allUsers,
   });
+};
+
+export const refreshPairToken = async (req, res, next) => {
+  req.user.accessToken = await updateUserWithToken(req.user, req.user._id);
+  req.user.refreshToken = await updateUserWithRefreshToken(
+    req.user,
+    req.user._id
+  );
+
+  const updatedUser = await User.findByIdAndUpdate(req.user._id, req.user, {
+    new: true,
+    fields: {
+      accessToken: 1,
+      refreshToken: 1,
+      isVerified: 1,
+    },
+  });
+  res.cookie("refreshtoken", loggedUser.refreshToken, {
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    httpOnly: true,
+  })
+  res.json(updatedUser);
 };
