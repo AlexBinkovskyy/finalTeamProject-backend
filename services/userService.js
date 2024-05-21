@@ -97,6 +97,7 @@ export const deleteTokenFromUser = async (userData) => {
 };
 
 export const emailService = async (user) => {
+  console.log(user);
   const emailConfig = {
     host: process.env.POST_SERVICE_HOST,
     port: process.env.POST_SERVICE_PORT,
@@ -107,7 +108,7 @@ export const emailService = async (user) => {
     },
   };
 
-  const { email, verificationToken, token } = user;
+  const { email, verificationToken, accessToken } = user;
 
   const transporter = nodemailer.createTransport(emailConfig);
   const emailOptions = {
