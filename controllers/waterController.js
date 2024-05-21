@@ -110,12 +110,14 @@ export const getWaterByDay = asyncWrapper(async (req, res, next) => {
 
   const findWater = await Water.findOne({ owner: ownerId });
   if (!findWater) {
+
     return res.json({
       date: date,
       dailyCount: [],
       totalWater: 0,
       waterRecordsAmount: 0,
     });
+
   }
 
   const waterArr = findWater.waterAmount.find((item) => item.date === date);
@@ -138,7 +140,9 @@ export const getWaterByMonth = asyncWrapper(async (req, res, next) => {
   const findWater = await Water.findOne({ owner: ownerId });
 
   if (!findWater) {
+
     return res.json([]);
+
   }
 
   const waterArr = findWater.waterAmount.filter((item) => {
