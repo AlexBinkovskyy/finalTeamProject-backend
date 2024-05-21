@@ -125,6 +125,7 @@ export const emailPassRecoveryController = async (req, res, nex) => {
 
 export const recoveryPasswordController = async (req, res, next) => {
   const { resetToken, password } = req.body;
+ 
   try {
     const { id } = jwt.verify(resetToken, process.env.ACCESS_SECRET_KEY);
     const user = await checkResetTokenPlusUser(id, resetToken);
