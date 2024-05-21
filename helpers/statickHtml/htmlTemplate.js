@@ -125,7 +125,7 @@ export const htmlTemplate = (link) => {
           <tr>
             <td align="center" valign="top" style="padding: 36px 24px;">
               <a href="https://alexbinkovskyy.github.io/finalTeamProject/" target="_blank" style="display: inline-block;">
-                <img src="https://finalteamproject-backend.onrender.com/favicon.ico" alt="Logo" border="0" width="48" style="display: block; width: 48px; max-width: 48px; min-width: 48px;">
+                <img src="https://finalteamproject-backend.onrender.com/icon/favicon.ico" alt="Logo" border="0" width="48" style="display: block; width: 48px; max-width: 48px; min-width: 48px;">
               </a>
             </td>
           </tr>

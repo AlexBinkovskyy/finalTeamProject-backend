@@ -22,6 +22,7 @@ import { checkId } from '../midleWares/checkId.js'
 const waterRouter = express.Router()
 
 waterRouter.post('/add', validateBody(addWaterDataSchema), protect, addWater)
+
 waterRouter.put(
   '/edit/:id',
   validateBody(updateWaterDataSchema),

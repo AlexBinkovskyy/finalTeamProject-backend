@@ -6,6 +6,7 @@ import swaggerUi from 'swagger-ui-express'
 import swaggerDocument from "./swagger.json" assert { type: "json" };
 import userRouter from "./routes/userRouter.js";
 import waterRouter from "./routes/waterRouter.js";
+import cookieParser from "cookie-parser";
 
 
 dotenv.config();
@@ -27,9 +28,27 @@ mongoose
     process.exit(1);
   });
 
-app.use(cors());
+app.use(cors(
+  {
+//   origin: 'https://alexbinkovskyy.github.io/finalTeamProject',
+  // credentials: true
+}
+));
 app.use(express.json());
+app.use(cookieParser({
+  withCredentials: true
+}))
 app.use(express.static("public"));
+
+app.use((req, res, next) => {
+  res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('Content-Security-Policy', "default-src 'self'");
+  next();
+});
+
 
 app.use("/api/users", userRouter);
 app.use("/api/water", waterRouter);

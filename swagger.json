@@ -343,6 +343,7 @@
       "put": {
         "tags": ["Users"],
         "summary": "Update users settings",
+        "security": [{ "Bearer": [] }],
         "parameters": [],
         "requestBody": {
           "description": "Example of required naming of fields",

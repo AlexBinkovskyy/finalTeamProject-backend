@@ -110,19 +110,26 @@ export const getWaterByDay = asyncWrapper(async (req, res, next) => {
 
   const findWater = await Water.findOne({ owner: ownerId });
   if (!findWater) {
-    return next(HttpError(404));
+
+    return res.json({
+      date: date,
+      dailyCount: [],
+      totalWater: 0,
+      waterRecordsAmount: 0,
+    });
+
   }
 
   const waterArr = findWater.waterAmount.find((item) => item.date === date);
   if (!waterArr) {
-    return res.status(200).json({
+    return res.json({
       date: date,
       dailyCount: [],
       totalWater: 0,
       waterRecordsAmount: 0,
     });
   }
-  res.status(200).json(waterArr);
+  res.json(waterArr);
 });
 
 export const getWaterByMonth = asyncWrapper(async (req, res, next) => {
@@ -133,7 +140,9 @@ export const getWaterByMonth = asyncWrapper(async (req, res, next) => {
   const findWater = await Water.findOne({ owner: ownerId });
 
   if (!findWater) {
-    return next(HttpError(404));
+
+    return res.json([]);
+
   }
 
   const waterArr = findWater.waterAmount.filter((item) => {

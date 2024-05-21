@@ -52,3 +52,6 @@ export const passrecoverySchema = Joi.object({
   }),
 });
 
+export const refreshTokenSchema = Joi.object({
+  refreshToken: Joi.string().min(171).max(171).required()
+})
