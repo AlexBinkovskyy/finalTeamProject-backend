@@ -34,7 +34,6 @@ export const checkAuthenticityAndLogout = async (req, res, next) => {
 };
 
 export const checkRefreshAuthenticity = async (req, res, next) => {
-
   const {refreshToken: oldRefreshToken} = req.body
 
   try {

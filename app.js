@@ -31,11 +31,13 @@ mongoose
 app.use(cors(
   {
 //   origin: 'https://alexbinkovskyy.github.io/finalTeamProject',
-  credentials: true
+  // credentials: true
 }
 ));
 app.use(express.json());
-app.use(cookieParser())
+app.use(cookieParser({
+  withCredentials: true
+}))
 app.use(express.static("public"));
 
 app.use((req, res, next) => {
