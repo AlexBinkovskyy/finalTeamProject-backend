@@ -116,6 +116,7 @@ export const emailPassRecoveryController = async (req, res, nex) => {
 
   if (!user) throw HttpError(404, "User not found");
   if (!user.email) throw HttpError(400, "missing required field email");
+  if (!user.isVerified) throw HttpError(401, 'You must verufy your email first')
 
   await recoveryEmailService(user);
   res.json({

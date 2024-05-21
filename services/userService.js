@@ -63,7 +63,6 @@ export const checkResetTokenPlusUser = async (id, token) => {
     isVerified: 1,
     email: 1
   });
-  console.log(user);
   if (!user.isVerified) return false;
   const comparetokens = user.resetToken === token ? true : false;
   return comparetokens ? user : false;
