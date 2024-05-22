@@ -34,6 +34,8 @@ export const changeUserCredsSchema = Joi.object({
     mimetype: Joi.string().required(),
     size: Joi.number().required(),
   }),
+  bmi: Joi.number().max(5),
+  height: Joi.number().min(50).max(260)
 });
 
 export const emailSendPassRecoverySchema = Joi.object({
