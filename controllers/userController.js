@@ -185,5 +185,6 @@ export const refreshPairToken = async (req, res, next) => {
   //   SameSite: none,
   //   Secure: true
   // });
+  console.log(updatedUser);
   res.json(updatedUser);
 };
