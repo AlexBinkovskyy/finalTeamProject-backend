@@ -118,25 +118,28 @@ export const passRecoveryHtmlTemplate = (token) => {
   
       <!-- start logo -->
       <tr>
-        <td align="center" bgcolor="#e9ecef">
-          <!--[if (gte mso 9)|(IE)]>
-          <table align="center" border="0" cellpadding="0" cellspacing="0" width="600">
+      <td align="center" bgcolor="#e9ecef">
+        <!--[if (gte mso 9)|(IE)]>
+        <table align="center" border="0" cellpadding="0" cellspacing="0" width="600">
+        <tr>
+        <td align="center" valign="top" width="600">
+        <![endif]-->
+        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
           <tr>
-          <td align="center" valign="top" width="600">
-          <![endif]-->
-          <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
-            <tr>
-              <td align="center" valign="top" style="padding: 36px 24px;">
-          </td>
-            </tr>
-          </table>
-          <!--[if (gte mso 9)|(IE)]>
-          </td>
+            <td align="center" valign="top" style="padding: 36px 24px;">
+              <a href="https://alexbinkovskyy.github.io/finalTeamProject" target="_blank" style="display: inline-block;">
+                <img src="https://finalteamproject-backend.onrender.com/icon/favicon.ico" alt="Logo" border="0" width="48" style="display: block; width: 48px; max-width: 48px; min-width: 48px;">
+              </a>
+            </td>
           </tr>
-          </table>
-          <![endif]-->
+        </table>
+        <!--[if (gte mso 9)|(IE)]>
         </td>
-      </tr>
+        </tr>
+        </table>
+        <![endif]-->
+      </td>
+    </tr>
       <!-- end logo -->
   
       <!-- start hero -->
