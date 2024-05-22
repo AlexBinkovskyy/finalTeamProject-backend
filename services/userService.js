@@ -184,6 +184,8 @@ export const login = async (user) => {
       activeTime: loggedUser.activeTime,
       goal: loggedUser.goal,
       avatarUrl: loggedUser.avatarUrl,
+      bmi: loggedUser.bmi,
+      height: loggedUser.height,      
       isVerified: loggedUser.isVerified,
     },
   };

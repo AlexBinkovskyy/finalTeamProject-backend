@@ -82,6 +82,8 @@ export const getCurrentUserCreds = async (req, res, next) => {
       activeTime: req.user.activeTime,
       goal: req.user.goal,
       avatarUrl: req.user.avatarUrl,
+      bmi: req.user.bmi,
+      height: req.user.height,  
       isVerified: req.user.isVerified,
     },
   });
@@ -106,6 +108,8 @@ export const chahgeUserCreds = async (req, res, next) => {
       activeTime: req.user.activeTime,
       goal: req.user.goal,
       avatarUrl: req.user.avatarUrl,
+      bmi: req.user.bmi,
+      height: req.user.height,
       isVerified: req.user.isVerified,
     },
   });
