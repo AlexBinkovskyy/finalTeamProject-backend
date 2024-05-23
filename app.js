@@ -28,12 +28,7 @@ mongoose
     process.exit(1);
   });
 
-app.use(cors(
-  {
-//   origin: 'https://alexbinkovskyy.github.io/finalTeamProject',
-  // credentials: true
-}
-));
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser({
   withCredentials: true
@@ -52,7 +47,9 @@ app.use((req, res, next) => {
 
 app.use("/api/users", userRouter);
 app.use("/api/water", waterRouter);
+app.use("/api/googleauth", googleAuthRouter)
 app.use("/api/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 
 app.use((_, res) => {
   res.status(404).json({ message: "Rout not found" });
