@@ -47,7 +47,8 @@ app.use((req, res, next) => {
 
 app.use("/api/users", userRouter);
 app.use("/api/water", waterRouter);
-app.use("/api/googleauth", googleAuthRouter)
+// app.use("/api/googleauth", googleAuthRouter)
+
 app.use("/api/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 
