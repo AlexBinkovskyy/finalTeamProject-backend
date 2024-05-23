@@ -59,13 +59,6 @@ export const loginUser = async (req, res, next) => {
   const user = await checkUserCreds(req.body);
   if (!user) throw HttpError(401, "Email or password is wrong or not verified");
   const loggedUser = await login(user);
-
-  // res.cookie("refreshToken", loggedUser.refreshToken, {
-  //   maxAge: 7 * 24 * 60 * 60 * 1000,
-  //   path: "/",
-  //   SameSite: none,
-  //   Secure: true
-  // });
   res.json(loggedUser);
 };
 
@@ -183,12 +176,6 @@ export const refreshPairToken = async (req, res, next) => {
       isVerified: 1,
     },
   });
-  // res.cookie("refreshToken", updatedUser.refreshToken, {
-  //   maxAge: 7 * 24 * 60 * 60 * 1000,
-  //   path: "/",
-  //   SameSite: none,
-  //   Secure: true
-  // });
-  console.log(updatedUser);
+
   res.json(updatedUser);
 };
