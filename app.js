@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 import express from "express";
 import swaggerUi from 'swagger-ui-express'
-import swaggerDocument from "./swagger.json" assert { type: "json" };
+import {readFile} from 'fs/promises'
 import userRouter from "./routes/userRouter.js";
 import waterRouter from "./routes/waterRouter.js";
 import cookieParser from "cookie-parser";
@@ -11,6 +11,8 @@ import cookieParser from "cookie-parser";
 
 dotenv.config();
 const { PORT, DB_HOST } = process.env;
+
+const swaggerDocument = JSON.parse(await readFile(new URL('./swagger.json', import.meta.url)))
 
 const app = express();
 

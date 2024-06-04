@@ -144,7 +144,8 @@ export const recoveryPasswordController = async (req, res, next) => {
 };
 
 export const getAllUsers = async (req, res, next) => {
-  const allUsers = await User.aggregate([
+  const totalUsersCount = await User.countDocuments();
+  const users = await User.aggregate([
     {
       $match: {
         avatarUrl: {
@@ -156,8 +157,8 @@ export const getAllUsers = async (req, res, next) => {
     { $project: { avatarUrl: 1, _id: 0 } },
   ]);
   res.json({
-    userCount: allUsers.length,
-    userAvatars: allUsers,
+    userCount: totalUsersCount,
+    userAvatars: users,
   });
 };
 
